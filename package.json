@@ -47,6 +47,7 @@
   },
   "devDependencies": {
     "@types/sharp": "^0.27.1",
+    "firebase-tools": "^9.5.0",
     "ts-node": "^9.1.1"
   }
 }
