@@ -17,7 +17,7 @@ type Frame = {
 const frames: Frame[] = [
   {
     id: "gallery",
-    path: "frames/gallery.jpg",
+    path: "gallery.jpg",
     top: 68,
     left: 537,
     width: 485,
@@ -25,7 +25,7 @@ const frames: Frame[] = [
   },
   {
     id: "tv",
-    path: "frames/tv.jpg",
+    path: "tv.jpg",
     top: 492,
     left: 533,
     width: 2209,
@@ -33,7 +33,7 @@ const frames: Frame[] = [
   },
   {
     id: "laptop",
-    path: "frames/laptop.jpg",
+    path: "laptop.jpg",
     top: 334,
     left: 2154,
     width: 1010,
@@ -75,7 +75,11 @@ export const frameImage = functions
           .resize(frame.width, frame.height)
           .toBuffer();
 
-        const [frameBuffer] = await bucket.file(frame.path).download();
+        const [frameBuffer] = await admin
+          .storage()
+          .bucket("framejoy-frames")
+          .file(frame.path)
+          .download();
 
         const compositeImage = await sharp(frameBuffer)
           .composite([
