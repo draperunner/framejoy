@@ -7,9 +7,9 @@ import {
   Progress,
   Text,
   VStack,
-  Wrap,
   Image,
-  WrapItem,
+  ScaleFade,
+  SimpleGrid,
 } from "@chakra-ui/react";
 import { useDropzone } from "react-dropzone";
 import { v4 as uuid } from "uuid";
@@ -72,30 +72,27 @@ export const Main: React.FC = () => {
     [user]
   );
 
-  const { getRootProps, getInputProps } = useDropzone({ onDrop });
-
-  if (framedFiles.length > 0) {
-    return (
-      <VStack spacing={8}>
-        <Heading as="h1">FrameJoy</Heading>
-        <Wrap>
-          {framedFiles.map((url) => (
-            <WrapItem>
-              <Center w="180px" h="80px" bg="red.200">
-                <Image src={url} alt="Framed image" />
-              </Center>
-            </WrapItem>
-          ))}
-        </Wrap>
-      </VStack>
-    );
-  }
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   return (
     <VStack spacing={8}>
-      <Heading as="h1">FrameJoy</Heading>
-      {progress > 0 ? (
-        <Container>
+      <ScaleFade in={framedFiles.length > 0} unmountOnExit>
+        <Heading as="h1" marginBottom="2rem">
+          Enjoy! 💁‍♂️
+        </Heading>
+        <SimpleGrid columns={3}>
+          {framedFiles.map((url) => (
+            <Container minWidth="400px">
+              <Image src={url} alt="Framed image" borderRadius="md" />
+            </Container>
+          ))}
+        </SimpleGrid>
+      </ScaleFade>
+      <ScaleFade in={!framedFiles.length && progress > 0} unmountOnExit>
+        <Heading as="h1" marginBottom="2rem">
+          Processing ...
+        </Heading>
+        <Container width="100vw">
           <Progress
             value={progress}
             hasStripe
@@ -104,20 +101,25 @@ export const Main: React.FC = () => {
             colorScheme="teal"
           />
         </Container>
-      ) : (
+      </ScaleFade>
+      <ScaleFade in={!framedFiles.length && progress === 0} unmountOnExit>
+        <Heading as="h1" marginBottom="2rem">
+          Framejoy
+        </Heading>
         <Box
           {...getRootProps()}
           borderRadius="xl"
           borderStyle="dashed"
-          borderColor="teal.100"
+          backgroundColor={isDragActive ? "blue.50" : "transparent"}
+          borderColor="blue.500"
           borderWidth="thick"
         >
           <Center h="sm" w="lg">
             <input {...getInputProps()} />
-            <Text>Drop the files here ...</Text>
+            <Text color="blue.600">Drop your image here!</Text>
           </Center>
         </Box>
-      )}
+      </ScaleFade>
     </VStack>
   );
 };

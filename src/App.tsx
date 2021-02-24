@@ -1,5 +1,12 @@
 import * as React from "react";
-import { ChakraProvider, Box, Grid, theme } from "@chakra-ui/react";
+import {
+  ChakraProvider,
+  Box,
+  Text,
+  theme,
+  Flex,
+  Container,
+} from "@chakra-ui/react";
 
 import { ColorModeSwitcher } from "./ColorModeSwitcher";
 import { UserProvider } from "./auth";
@@ -10,10 +17,19 @@ export const App = () => {
     <ChakraProvider theme={theme}>
       <UserProvider>
         <Box textAlign="center" fontSize="xl">
-          <Grid minH="100vh" p={3}>
+          <Flex
+            flexDirection="row"
+            justifyContent="space-between"
+            padding="10px"
+          >
+            <Text as="span" justifySelf="flex-start">
+              Framejoy
+            </Text>
             <ColorModeSwitcher justifySelf="flex-end" />
+          </Flex>
+          <Container>
             <Main />
-          </Grid>
+          </Container>
         </Box>
       </UserProvider>
     </ChakraProvider>
