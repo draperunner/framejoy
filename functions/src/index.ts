@@ -61,7 +61,7 @@ export const frameImage = functions
 
     const fileName = path.basename(filePath);
 
-    if (fileName.startsWith("framed_")) {
+    if (fileName.startsWith("framed-")) {
       console.log("Image is already framed");
       return;
     }
