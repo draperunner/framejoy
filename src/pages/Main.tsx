@@ -72,7 +72,10 @@ export const Main: React.FC = () => {
     [user]
   );
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    accept: "image/jpeg, image/png, image/webp",
+    onDrop,
+  });
 
   return (
     <VStack spacing={8}>
