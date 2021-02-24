@@ -101,5 +101,7 @@ export const frameImage = functions
       })
     );
 
+    await bucket.file(filePath).delete();
+
     return framedImageUrls;
   });
