@@ -1,7 +1,9 @@
 import * as functions from "firebase-functions";
-import admin, { firestore } from "firebase-admin";
+import admin from "firebase-admin";
 import sharp from "sharp";
 import path from "path";
+
+admin.initializeApp();
 
 type Frame = {
   id: string;
@@ -12,12 +14,45 @@ type Frame = {
   height: number;
 };
 
-export const frame = functions
+const frames: Frame[] = [
+  {
+    id: "gallery",
+    path: "frames/gallery.jpg",
+    top: 68,
+    left: 537,
+    width: 485,
+    height: 495,
+  },
+  {
+    id: "tv",
+    path: "frames/tv.jpg",
+    top: 492,
+    left: 533,
+    width: 2209,
+    height: 1239,
+  },
+  {
+    id: "laptop",
+    path: "frames/laptop.jpg",
+    top: 334,
+    left: 2154,
+    width: 1010,
+    height: 626,
+  },
+];
+
+export const frameImage = functions
   .region("europe-west1")
-  .storage.object()
-  .onFinalize(async (object) => {
-    const fileBucket = object.bucket; // The Storage bucket that contains the file.
-    const filePath = object.name; // File path in the bucket.
+  .https.onCall(async (data, context) => {
+    if (!context.auth) {
+      throw new functions.https.HttpsError(
+        "failed-precondition",
+        "The function must be called " + "while authenticated."
+      );
+    }
+
+    const fileBucket = data.bucket; // The Storage bucket that contains the file.
+    const filePath = data.fullPath; // File path in the bucket.
 
     if (!filePath) {
       console.log("filePath does not exist");
@@ -31,22 +66,18 @@ export const frame = functions
       return;
     }
 
-    const framesRefs = await firestore().collection("frames").get();
-    const frames = framesRefs.docs.map((d) => ({
-      id: d.id,
-      ...d.data(),
-    })) as Frame[];
-
     const bucket = admin.storage().bucket(fileBucket);
     const [fileBuffer] = await bucket.file(filePath).download();
 
-    await Promise.all(
+    const framedImageUrls = await Promise.all(
       frames.map(async (frame) => {
         const content = await sharp(fileBuffer)
           .resize(frame.width, frame.height)
           .toBuffer();
 
-        const compositeImage = await sharp(frame.path)
+        const [frameBuffer] = await bucket.file(frame.path).download();
+
+        const compositeImage = await sharp(frameBuffer)
           .composite([
             {
               input: content,
@@ -57,11 +88,18 @@ export const frame = functions
           .jpeg()
           .toBuffer();
 
-        return bucket
-          .file(
-            path.join(path.dirname(filePath), `framed-${frame.id}-${fileName}`)
+        const frameFile = bucket.file(
+          path.join(
+            path.dirname(filePath),
+            `framed-${frame.id}-${fileName}`.replace(".png", ".jpg")
           )
-          .save(compositeImage);
+        );
+
+        await frameFile.save(compositeImage);
+        await frameFile.makePublic();
+        return frameFile.publicUrl();
       })
     );
+
+    return framedImageUrls;
   });
