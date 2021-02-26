@@ -13,13 +13,10 @@ import {
   Grid,
 } from "@chakra-ui/react";
 import { useDropzone } from "react-dropzone";
-import { v4 as uuid } from "uuid";
 
 import firebase from "firebase/app";
 import "firebase/storage";
 import "firebase/functions";
-
-import { useUser } from "../auth";
 
 const functions = firebase.functions();
 
@@ -42,48 +39,35 @@ function distribute<T>(array: T[], desiredArrayCount: number): T[][] {
   return distribution;
 }
 
+function fileToBase64(file: File): Promise<string> {
+  const reader = new FileReader();
+  return new Promise((resolve, reject) => {
+    reader.onloadend = () => {
+      resolve(reader.result as string);
+    };
+    reader.onabort = () => reject("Aborted");
+    reader.onerror = (err) => reject(err);
+    reader.readAsDataURL(file);
+  });
+}
+
 export const Main: React.FC = () => {
-  const user = useUser();
-  const [progress, setProgress] = useState<number>(0);
+  const [submitted, setSubmitted] = useState<boolean>(false);
   const [framedFiles, setFramedFiles] = useState<string[]>([]);
 
-  const onDrop = useCallback(
-    (acceptedFiles: File[]) => {
-      const file = acceptedFiles[0];
-      if (!file) return;
+  const onDrop = useCallback(async (acceptedFiles: File[]) => {
+    const file = acceptedFiles[0];
+    if (!file) return;
 
-      const storageRef = firebase.storage().ref();
-      const uploadTask = storageRef
-        .child(
-          `content/${user?.uid}/${file.name.replace(
-            /.*(\..+$)/,
-            `${uuid()}$1`
-          )}`
-        )
-        .put(file);
+    setSubmitted(true);
 
-      uploadTask.on(
-        "state_changed",
-        (snapshot) => {
-          const progress =
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log("Upload is " + progress + "% done");
-          setProgress(progress);
-        },
-        (error) => {
-          console.error(error);
-        },
-        () => {
-          const { bucket, name, fullPath } = uploadTask.snapshot.ref;
+    const fileData = await fileToBase64(file);
+    const result = await frameImage({
+      data: fileData,
+    });
 
-          frameImage({ bucket, name, fullPath }).then((result) =>
-            setFramedFiles(result.data)
-          );
-        }
-      );
-    },
-    [user]
-  );
+    setFramedFiles(result.data);
+  }, []);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: "image/jpeg, image/png, image/webp",
@@ -108,7 +92,7 @@ export const Main: React.FC = () => {
           ))}
         </Grid>
       </ScaleFade>
-      <ScaleFade in={!framedFiles.length && progress > 0} unmountOnExit>
+      <ScaleFade in={!framedFiles.length && submitted} unmountOnExit>
         <Heading as="h1" marginBottom="2rem">
           Cutting and glueing ... ✂️
         </Heading>
@@ -124,7 +108,7 @@ export const Main: React.FC = () => {
           </Container>
         </SimpleGrid>
       </ScaleFade>
-      <ScaleFade in={!framedFiles.length && progress === 0} unmountOnExit>
+      <ScaleFade in={!framedFiles.length && !submitted} unmountOnExit>
         <Heading as="h1" marginBottom="2rem">
           Framejoy
         </Heading>

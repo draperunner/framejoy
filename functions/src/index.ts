@@ -1,7 +1,7 @@
 import * as functions from "firebase-functions";
 import admin from "firebase-admin";
 import sharp, { OverlayOptions } from "sharp";
-import path from "path";
+import { v4 as uuid } from "uuid";
 
 admin.initializeApp();
 
@@ -75,7 +75,7 @@ export const frameImage = functions
   .runWith({
     memory: "1GB",
   })
-  .https.onCall(async (data, context) => {
+  .https.onCall(async ({ data }, context) => {
     if (!context.auth) {
       throw new functions.https.HttpsError(
         "failed-precondition",
@@ -83,23 +83,16 @@ export const frameImage = functions
       );
     }
 
-    const fileBucket = data.bucket; // The Storage bucket that contains the file.
-    const filePath = data.fullPath; // File path in the bucket.
-
-    if (!filePath) {
-      console.log("filePath does not exist");
-      return;
+    if (!data || !data.startsWith("data:image/png")) {
+      throw new functions.https.HttpsError(
+        "failed-precondition",
+        "Invalid input data."
+      );
     }
 
-    const fileName = path.basename(filePath);
-
-    if (fileName.startsWith("framed-")) {
-      console.log("Image is already framed");
-      return;
-    }
-
-    const bucket = admin.storage().bucket(fileBucket);
-    const [fileBuffer] = await bucket.file(filePath).download();
+    const dataWithoutPrefix = data.replace(/^data:.+;base64,/, "");
+    const fileBuffer = Buffer.from(dataWithoutPrefix, "base64");
+    const fileId = uuid();
 
     const framedImageUrls = await Promise.all(
       frames.map(async (frame) => {
@@ -133,20 +126,14 @@ export const frameImage = functions
           .jpeg()
           .toBuffer();
 
-        const frameFile = bucket.file(
-          path.join(
-            path.dirname(filePath),
-            `framed-${frame.id}-${fileName}`.replace(".png", ".jpg")
-          )
-        );
+        const bucket = admin.storage().bucket();
+        const frameFile = bucket.file(`${fileId}-${frame.id}.jpg`);
 
         await frameFile.save(compositeImage);
         await frameFile.makePublic();
         return frameFile.publicUrl();
       })
     );
-
-    await bucket.file(filePath).delete();
 
     return framedImageUrls;
   });
