@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import {
   Box,
   Center,
@@ -11,6 +11,8 @@ import {
   SimpleGrid,
   Skeleton,
   Grid,
+  useClipboard,
+  useToast,
 } from "@chakra-ui/react";
 import { useDropzone } from "react-dropzone";
 
@@ -55,6 +57,27 @@ export const Main: React.FC = () => {
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [framedFiles, setFramedFiles] = useState<string[]>([]);
 
+  const [selectedImage, setSelectedImage] = useState<string>("");
+  const { hasCopied, onCopy } = useClipboard(selectedImage);
+  const toast = useToast();
+
+  useEffect(() => {
+    if (selectedImage) {
+      onCopy();
+    }
+  }, [selectedImage, onCopy]);
+
+  useEffect(() => {
+    if (hasCopied) {
+      toast({
+        position: "bottom",
+        title: "Image URL copied!",
+        status: "success",
+        duration: 1000,
+      });
+    }
+  }, [toast, hasCopied]);
+
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
     if (!file) return;
@@ -85,7 +108,15 @@ export const Main: React.FC = () => {
             <Box key={i}>
               {group.map((url) => (
                 <Container width="400px" key={url} marginBottom="2rem">
-                  <Image src={url} alt="Framed image" borderRadius="md" />
+                  <Image
+                    src={url}
+                    alt="Framed image"
+                    borderRadius="md"
+                    cursor="pointer"
+                    border="0.25rem solid transparent"
+                    _hover={{ borderColor: "blue.500" }}
+                    onClick={() => setSelectedImage(url)}
+                  />
                 </Container>
               ))}
             </Box>
