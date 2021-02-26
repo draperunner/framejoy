@@ -10,6 +10,7 @@ import {
   ScaleFade,
   SimpleGrid,
   Skeleton,
+  Grid,
 } from "@chakra-ui/react";
 import { useDropzone } from "react-dropzone";
 import { v4 as uuid } from "uuid";
@@ -28,6 +29,18 @@ if (window.location.hostname === "localhost") {
 }
 
 const frameImage = functions.httpsCallable("frameImage");
+
+function distribute<T>(array: T[], desiredArrayCount: number): T[][] {
+  const distribution: T[][] = new Array(desiredArrayCount)
+    .fill([])
+    .map(() => []);
+  array.forEach((item, index) => {
+    const i = index % desiredArrayCount;
+    distribution[i].push(item);
+  });
+
+  return distribution;
+}
 
 export const Main: React.FC = () => {
   const user = useUser();
@@ -83,13 +96,17 @@ export const Main: React.FC = () => {
         <Heading as="h1" marginBottom="2rem">
           Enjoy! 💁‍♂️
         </Heading>
-        <SimpleGrid columns={3}>
-          {framedFiles.map((url) => (
-            <Container minWidth="400px">
-              <Image src={url} alt="Framed image" borderRadius="md" />
-            </Container>
+        <Grid templateColumns="repeat(3, 1fr)" templateRows="masonry">
+          {distribute(framedFiles, 3).map((group, i) => (
+            <Box key={i}>
+              {group.map((url) => (
+                <Container width="400px" key={url} marginBottom="2rem">
+                  <Image src={url} alt="Framed image" borderRadius="md" />
+                </Container>
+              ))}
+            </Box>
           ))}
-        </SimpleGrid>
+        </Grid>
       </ScaleFade>
       <ScaleFade in={!framedFiles.length && progress > 0} unmountOnExit>
         <Heading as="h1" marginBottom="2rem">
