@@ -18,7 +18,7 @@ type Frame = {
 const frames: Frame[] = [
   {
     id: "gallery",
-    background: "gallery.jpg",
+    background: "gallery.webp",
     top: 68,
     left: 537,
     width: 485,
@@ -26,7 +26,7 @@ const frames: Frame[] = [
   },
   {
     id: "tv",
-    background: "tv.jpg",
+    background: "tv.webp",
     top: 492,
     left: 533,
     width: 2209,
@@ -34,8 +34,8 @@ const frames: Frame[] = [
   },
   {
     id: "mckinney",
-    background: "mckinney.jpg",
-    foreground: "mckinney_foreground.png",
+    background: "mckinney.webp",
+    foreground: "mckinney_foreground.webp",
     top: 307,
     left: 175,
     width: 701,
@@ -43,8 +43,8 @@ const frames: Frame[] = [
   },
   {
     id: "presentation",
-    background: "presentation.jpg",
-    foreground: "presentation_foreground.png",
+    background: "presentation.webp",
+    foreground: "presentation_foreground.webp",
     top: 411,
     left: 454,
     width: 951,
