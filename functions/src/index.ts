@@ -7,7 +7,7 @@ admin.initializeApp();
 
 type Frame = {
   id: string;
-  path: string;
+  background: string;
   top: number;
   left: number;
   width: number;
@@ -17,7 +17,7 @@ type Frame = {
 const frames: Frame[] = [
   {
     id: "gallery",
-    path: "gallery.jpg",
+    background: "gallery.jpg",
     top: 68,
     left: 537,
     width: 485,
@@ -25,7 +25,7 @@ const frames: Frame[] = [
   },
   {
     id: "tv",
-    path: "tv.jpg",
+    background: "tv.jpg",
     top: 492,
     left: 533,
     width: 2209,
@@ -33,7 +33,7 @@ const frames: Frame[] = [
   },
   {
     id: "laptop",
-    path: "laptop.jpg",
+    background: "laptop.jpg",
     top: 334,
     left: 2154,
     width: 1010,
@@ -78,7 +78,7 @@ export const frameImage = functions
         const [frameBuffer] = await admin
           .storage()
           .bucket("framejoy-frames")
-          .file(frame.path)
+          .file(frame.background)
           .download();
 
         const compositeImage = await sharp(frameBuffer)
