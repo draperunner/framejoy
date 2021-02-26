@@ -52,8 +52,29 @@ const frames: Frame[] = [
   },
 ];
 
+const cache: Record<string, Buffer> = {};
+
+async function downloadFrame(path: string): Promise<Buffer> {
+  if (cache[path]) {
+    console.log("Using cached", path);
+    return cache[path];
+  }
+
+  const [buffer] = await admin
+    .storage()
+    .bucket("framejoy-frames")
+    .file(path)
+    .download();
+
+  cache[path] = buffer;
+  return buffer;
+}
+
 export const frameImage = functions
   .region("europe-west1")
+  .runWith({
+    memory: "1GB",
+  })
   .https.onCall(async (data, context) => {
     if (!context.auth) {
       throw new functions.https.HttpsError(
@@ -87,18 +108,8 @@ export const frameImage = functions
           .toBuffer();
 
         const [background, foreground] = await Promise.all([
-          admin
-            .storage()
-            .bucket("framejoy-frames")
-            .file(frame.background)
-            .download(),
-          frame.foreground
-            ? admin
-                .storage()
-                .bucket("framejoy-frames")
-                .file(frame.foreground)
-                .download()
-            : undefined,
+          downloadFrame(frame.background),
+          frame.foreground ? downloadFrame(frame.foreground) : undefined,
         ]);
 
         const layers: OverlayOptions[] = [
@@ -111,13 +122,13 @@ export const frameImage = functions
 
         if (foreground) {
           layers.push({
-            input: foreground[0],
+            input: foreground,
             top: 0,
             left: 0,
           });
         }
 
-        const compositeImage = await sharp(background[0])
+        const compositeImage = await sharp(background)
           .composite(layers)
           .jpeg()
           .toBuffer();
