@@ -1,6 +1,6 @@
 import * as functions from "firebase-functions";
 import admin from "firebase-admin";
-import sharp from "sharp";
+import sharp, { OverlayOptions } from "sharp";
 import path from "path";
 
 admin.initializeApp();
@@ -8,6 +8,7 @@ admin.initializeApp();
 type Frame = {
   id: string;
   background: string;
+  foreground?: string;
   top: number;
   left: number;
   width: number;
@@ -32,12 +33,22 @@ const frames: Frame[] = [
     height: 1239,
   },
   {
-    id: "laptop",
-    background: "laptop.jpg",
-    top: 334,
-    left: 2154,
-    width: 1010,
-    height: 626,
+    id: "mckinney",
+    background: "mckinney.jpg",
+    foreground: "mckinney_foreground.png",
+    top: 307,
+    left: 175,
+    width: 701,
+    height: 678,
+  },
+  {
+    id: "presentation",
+    background: "presentation.jpg",
+    foreground: "presentation_foreground.png",
+    top: 411,
+    left: 454,
+    width: 951,
+    height: 535,
   },
 ];
 
@@ -75,20 +86,39 @@ export const frameImage = functions
           .resize(frame.width, frame.height)
           .toBuffer();
 
-        const [frameBuffer] = await admin
-          .storage()
-          .bucket("framejoy-frames")
-          .file(frame.background)
-          .download();
+        const [background, foreground] = await Promise.all([
+          admin
+            .storage()
+            .bucket("framejoy-frames")
+            .file(frame.background)
+            .download(),
+          frame.foreground
+            ? admin
+                .storage()
+                .bucket("framejoy-frames")
+                .file(frame.foreground)
+                .download()
+            : undefined,
+        ]);
 
-        const compositeImage = await sharp(frameBuffer)
-          .composite([
-            {
-              input: content,
-              top: frame.top,
-              left: frame.left,
-            },
-          ])
+        const layers: OverlayOptions[] = [
+          {
+            input: content,
+            top: frame.top,
+            left: frame.left,
+          },
+        ];
+
+        if (foreground) {
+          layers.push({
+            input: foreground[0],
+            top: 0,
+            left: 0,
+          });
+        }
+
+        const compositeImage = await sharp(background[0])
+          .composite(layers)
           .jpeg()
           .toBuffer();
 
