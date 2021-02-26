@@ -4,12 +4,12 @@ import {
   Center,
   Container,
   Heading,
-  Progress,
   Text,
   VStack,
   Image,
   ScaleFade,
   SimpleGrid,
+  Skeleton,
 } from "@chakra-ui/react";
 import { useDropzone } from "react-dropzone";
 import { v4 as uuid } from "uuid";
@@ -93,17 +93,19 @@ export const Main: React.FC = () => {
       </ScaleFade>
       <ScaleFade in={!framedFiles.length && progress > 0} unmountOnExit>
         <Heading as="h1" marginBottom="2rem">
-          Processing ...
+          Cutting and glueing ... ✂️
         </Heading>
-        <Container width="100vw">
-          <Progress
-            value={progress}
-            hasStripe
-            size="lg"
-            isAnimated
-            colorScheme="teal"
-          />
-        </Container>
+        <SimpleGrid columns={3}>
+          <Container minWidth="400px">
+            <Skeleton height="245px" />
+          </Container>
+          <Container minWidth="400px">
+            <Skeleton height="460px" />
+          </Container>
+          <Container minWidth="400px">
+            <Skeleton height="245px" />
+          </Container>
+        </SimpleGrid>
       </ScaleFade>
       <ScaleFade in={!framedFiles.length && progress === 0} unmountOnExit>
         <Heading as="h1" marginBottom="2rem">
