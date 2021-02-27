@@ -108,7 +108,8 @@ export const frameImage = functions
       frames.map(async (frame) => {
         const content = await sharp(fileBuffer)
           .resize(frame.width, frame.height)
-          .rotate(frame.rotation)
+          .rotate(frame.rotation, { background: "rgba(0, 0, 0, 0)" })
+          .webp()
           .toBuffer();
 
         const [background, foreground] = await Promise.all([

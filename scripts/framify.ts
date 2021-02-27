@@ -63,6 +63,7 @@ async function main() {
   const content = await sharp("content/portrait.png")
     .resize(frame.width, frame.height)
     .rotate(frame.rotation, { background: "rgba(0, 0, 0, 0)" })
+    .webp()
     .toBuffer();
 
   return sharp(frame.background)
