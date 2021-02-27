@@ -72,10 +72,19 @@ const frames: Frame[] = [
     height: 1496,
     rotation: -9.3,
   },
+  {
+    id: "gallery",
+    background: "frames/gallery.webp",
+    foreground: "frames/gallery_foreground.webp",
+    top: 343,
+    left: 598,
+    width: 801,
+    height: 1177,
+  },
 ];
 
 async function main() {
-  const frame = frames.find(({ id }) => id === "holding");
+  const frame = frames.find(({ id }) => id === "gallery");
   const content = await sharp("content/portrait.png")
     .resize(frame.width, frame.height)
     .rotate(frame.rotation, { background: "rgba(0, 0, 0, 0)" })

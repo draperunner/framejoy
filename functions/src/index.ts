@@ -77,6 +77,15 @@ const frames: Frame[] = [
     height: 1496,
     rotation: -9.3,
   },
+  {
+    id: "gallery",
+    background: "gallery.webp",
+    foreground: "gallery_foreground.webp",
+    top: 343,
+    left: 598,
+    width: 801,
+    height: 1177,
+  },
 ];
 
 const cache: Record<string, Buffer> = {};
