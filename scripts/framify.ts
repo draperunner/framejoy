@@ -7,6 +7,7 @@ type Frame = {
   left: number;
   width: number;
   height: number;
+  rotation?: number;
 };
 
 const frames: Record<string, Frame> = {
@@ -47,12 +48,21 @@ const frames: Record<string, Frame> = {
     width: 951,
     height: 535,
   },
+  phone: {
+    background: "frames/phone.webp",
+    top: 330,
+    left: 869,
+    width: 247,
+    height: 423,
+    rotation: 13,
+  },
 };
 
 async function main() {
-  const frame = frames.presentation;
-  const content = await sharp("content/screenshot2.png")
+  const frame = frames.phone;
+  const content = await sharp("content/portrait.png")
     .resize(frame.width, frame.height)
+    .rotate(frame.rotation, { background: "rgba(0, 0, 0, 0)" })
     .toBuffer();
 
   return sharp(frame.background)

@@ -13,6 +13,7 @@ type Frame = {
   left: number;
   width: number;
   height: number;
+  rotation?: number;
 };
 
 const frames: Frame[] = [
@@ -49,6 +50,15 @@ const frames: Frame[] = [
     left: 454,
     width: 951,
     height: 535,
+  },
+  {
+    id: "phone",
+    background: "phone.webp",
+    top: 330,
+    left: 869,
+    width: 247,
+    height: 423,
+    rotation: 13,
   },
 ];
 
@@ -98,6 +108,7 @@ export const frameImage = functions
       frames.map(async (frame) => {
         const content = await sharp(fileBuffer)
           .resize(frame.width, frame.height)
+          .rotate(frame.rotation)
           .toBuffer();
 
         const [background, foreground] = await Promise.all([
