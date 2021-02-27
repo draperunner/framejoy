@@ -128,10 +128,20 @@ export const frameImage = functions
 
     const dataWithoutPrefix = data.replace(/^data:.+;base64,/, "");
     const fileBuffer = Buffer.from(dataWithoutPrefix, "base64");
+    const { width = 1, height = 1 } = await sharp(fileBuffer).metadata();
+    const aspectRatio = width / height;
     const fileId = uuid();
 
+    const sortedFrames = [...frames]
+      .sort((a, b) => {
+        const ratioA = a.width / a.height;
+        const ratioB = b.width / b.height;
+        return Math.abs(aspectRatio - ratioA) - Math.abs(aspectRatio - ratioB);
+      })
+      .slice(0, 6);
+
     const framedImageUrls = await Promise.all(
-      frames.map(async (frame) => {
+      sortedFrames.map(async (frame) => {
         const content = await sharp(fileBuffer)
           .resize(frame.width, frame.height)
           .rotate(frame.rotation, { background: "rgba(0, 0, 0, 0)" })
