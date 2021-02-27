@@ -76,6 +76,14 @@ const frames: Frame[] = [
     width: 419,
     height: 705,
   },
+  {
+    id: "interior",
+    background: "interior.webp",
+    top: 694,
+    left: 552,
+    width: 388,
+    height: 388,
+  },
 ];
 
 const cache: Record<string, Buffer> = {};

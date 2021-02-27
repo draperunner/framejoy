@@ -71,11 +71,19 @@ const frames: Frame[] = [
     width: 419,
     height: 705,
   },
+  {
+    id: "interior",
+    background: "frames/interior.webp",
+    top: 694,
+    left: 552,
+    width: 388,
+    height: 388,
+  },
 ];
 
 async function main() {
-  const frame = frames.find(({ id }) => id === "cafe");
-  const content = await sharp("content/portrait.png")
+  const frame = frames.find(({ id }) => id === "interior");
+  const content = await sharp("content/square.png")
     .resize(frame.width, frame.height)
     .rotate(frame.rotation, { background: "rgba(0, 0, 0, 0)" })
     .webp()
