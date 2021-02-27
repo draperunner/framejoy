@@ -1,7 +1,6 @@
 import React, { useState, useCallback, useEffect } from "react";
 import {
   Box,
-  Center,
   Container,
   Heading,
   Text,
@@ -150,11 +149,22 @@ export const Main: React.FC = () => {
           backgroundColor={isDragActive ? "blue.50" : "transparent"}
           borderColor="blue.500"
           borderWidth="thick"
+          padding="4rem"
         >
-          <Center h="sm" w="lg">
-            <input {...getInputProps()} />
-            <Text color="blue.600">Drop your image here!</Text>
-          </Center>
+          <input {...getInputProps()} />
+          <Image
+            src="/front-image.webp"
+            alt="Your image plus a frame equals awesome combo!"
+          />
+          <Text textAlign="center" color="blue.600">
+            Drop an image or click here to see it framed!
+          </Text>
+        </Box>
+        <Box marginTop="4rem">
+          <Text textAlign="center" fontSize="small">
+            Generated images are stored for one day. Your uploaded image is not
+            stored at all.
+          </Text>
         </Box>
       </ScaleFade>
     </VStack>
