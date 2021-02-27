@@ -67,6 +67,16 @@ const frames: Frame[] = [
     width: 651,
     height: 366,
   },
+  {
+    id: "holding",
+    background: "holding.webp",
+    foreground: "holding_foreground.webp",
+    top: 743,
+    left: 180,
+    width: 1106,
+    height: 1496,
+    rotation: -9.3,
+  },
 ];
 
 const cache: Record<string, Buffer> = {};

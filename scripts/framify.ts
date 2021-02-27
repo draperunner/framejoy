@@ -62,11 +62,21 @@ const frames: Frame[] = [
     width: 651,
     height: 366,
   },
+  {
+    id: "holding",
+    background: "frames/holding.webp",
+    foreground: "frames/holding_foreground.webp",
+    top: 743,
+    left: 180,
+    width: 1106,
+    height: 1496,
+    rotation: -9.3,
+  },
 ];
 
 async function main() {
-  const frame = frames.find(({ id }) => id === "tv");
-  const content = await sharp("content/landscape.png")
+  const frame = frames.find(({ id }) => id === "holding");
+  const content = await sharp("content/portrait.png")
     .resize(frame.width, frame.height)
     .rotate(frame.rotation, { background: "rgba(0, 0, 0, 0)" })
     .webp()
