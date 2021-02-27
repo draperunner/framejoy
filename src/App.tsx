@@ -2,10 +2,10 @@ import * as React from "react";
 import {
   ChakraProvider,
   Box,
-  Text,
   theme,
   Flex,
   Container,
+  Link,
 } from "@chakra-ui/react";
 
 import { ColorModeSwitcher } from "./ColorModeSwitcher";
@@ -22,9 +22,9 @@ export const App = () => {
             justifyContent="space-between"
             padding="10px"
           >
-            <Text as="span" justifySelf="flex-start">
+            <Link href="/" justifySelf="flex-start">
               Framejoy
-            </Text>
+            </Link>
             <ColorModeSwitcher justifySelf="flex-end" />
           </Flex>
           <Container>
