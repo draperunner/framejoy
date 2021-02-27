@@ -68,6 +68,14 @@ const frames: Frame[] = [
     height: 423,
     rotation: 13,
   },
+  {
+    id: "cafe",
+    background: "cafe.webp",
+    top: 741,
+    left: 677,
+    width: 419,
+    height: 705,
+  },
 ];
 
 const cache: Record<string, Buffer> = {};

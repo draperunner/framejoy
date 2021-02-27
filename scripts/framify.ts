@@ -63,10 +63,18 @@ const frames: Frame[] = [
     height: 423,
     rotation: 13,
   },
+  {
+    id: "cafe",
+    background: "frames/cafe.webp",
+    top: 741,
+    left: 677,
+    width: 419,
+    height: 705,
+  },
 ];
 
 async function main() {
-  const frame = frames.find(({ id }) => id === "phone");
+  const frame = frames.find(({ id }) => id === "cafe");
   const content = await sharp("content/portrait.png")
     .resize(frame.width, frame.height)
     .rotate(frame.rotation, { background: "rgba(0, 0, 0, 0)" })
