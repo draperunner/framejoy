@@ -19,3 +19,4 @@
 .env.production.local
 
 *.log
+output.jpg
