@@ -34,6 +34,14 @@ const frames: Frame[] = [
     height: 1239,
   },
   {
+    id: "laptop",
+    background: "laptop.webp",
+    top: 590,
+    left: 539,
+    width: 829,
+    height: 517,
+  },
+  {
     id: "mckinney",
     background: "mckinney.webp",
     foreground: "mckinney_foreground.webp",
