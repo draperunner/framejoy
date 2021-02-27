@@ -1,6 +1,7 @@
 import sharp from "sharp";
 
 type Frame = {
+  id: string;
   background: string;
   foreground?: string;
   top: number;
@@ -10,29 +11,33 @@ type Frame = {
   rotation?: number;
 };
 
-const frames: Record<string, Frame> = {
-  gallery: {
+const frames: Frame[] = [
+  {
+    id: "gallery",
     background: "frames/gallery.webp",
     top: 68,
     left: 537,
     width: 485,
     height: 495,
   },
-  tv: {
+  {
+    id: "tv",
     background: "frames/tv.webp",
     top: 492,
     left: 533,
     width: 2209,
     height: 1239,
   },
-  laptop: {
+  {
+    id: "laptop",
     background: "frames/laptop.webp",
     top: 334,
     left: 2154,
     width: 1010,
     height: 626,
   },
-  mckinney: {
+  {
+    id: "mckinney",
     background: "frames/mckinney.webp",
     foreground: "frames/mckinney_foreground.webp",
     top: 307,
@@ -40,7 +45,8 @@ const frames: Record<string, Frame> = {
     width: 701,
     height: 678,
   },
-  presentation: {
+  {
+    id: "presentation",
     background: "frames/presentation.webp",
     foreground: "frames/presentation_foreground.webp",
     top: 411,
@@ -48,7 +54,8 @@ const frames: Record<string, Frame> = {
     width: 951,
     height: 535,
   },
-  phone: {
+  {
+    id: "phone",
     background: "frames/phone.webp",
     top: 330,
     left: 869,
@@ -56,10 +63,10 @@ const frames: Record<string, Frame> = {
     height: 423,
     rotation: 13,
   },
-};
+];
 
 async function main() {
-  const frame = frames.phone;
+  const frame = frames.find(({ id }) => id === "phone");
   const content = await sharp("content/portrait.png")
     .resize(frame.width, frame.height)
     .rotate(frame.rotation, { background: "rgba(0, 0, 0, 0)" })
