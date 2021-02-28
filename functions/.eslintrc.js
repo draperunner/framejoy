@@ -7,7 +7,7 @@ module.exports = {
   extends: ["eslint:recommended"],
   parser: "@typescript-eslint/parser",
   parserOptions: {
-    project: ["tsconfig.json", "tsconfig.dev.json"],
+    project: ["functions/tsconfig.json", "functions/tsconfig.dev.json"],
     sourceType: "module",
   },
   ignorePatterns: [
@@ -15,6 +15,8 @@ module.exports = {
   ],
   plugins: ["@typescript-eslint", "import"],
   rules: {
+    "@typescript-eslint/no-unused-vars": "error",
+    "no-unused-vars": "off",
     quotes: ["error", "double"],
   },
 };

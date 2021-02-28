@@ -29,6 +29,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "lint": "eslint --ext .js,.ts src scripts functions",
     "framify": "node --require ts-node/register/transpile-only scripts/framify.ts && open output.jpg"
   },
   "eslintConfig": {

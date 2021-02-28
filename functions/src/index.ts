@@ -119,7 +119,7 @@ export const frameImage = functions
       );
     }
 
-    if (!data || !new RegExp(`^data:image/(png|jpeg|webp)`).test(data)) {
+    if (!data || !new RegExp("^data:image/(png|jpeg|webp)").test(data)) {
       throw new functions.https.HttpsError(
         "failed-precondition",
         "Invalid input data."
