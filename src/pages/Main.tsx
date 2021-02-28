@@ -13,7 +13,7 @@ import {
   useClipboard,
   useToast,
 } from "@chakra-ui/react";
-import { useDropzone } from "react-dropzone";
+import { FileRejection, useDropzone } from "react-dropzone";
 
 import firebase from "firebase/app";
 import "firebase/storage";
@@ -91,9 +91,52 @@ export const Main: React.FC = () => {
     setFramedFiles(result.data);
   }, []);
 
+  const onDropRejected = useCallback(
+    async (fileRejections: FileRejection[]) => {
+      const displayToast = (message: string) =>
+        toast({
+          position: "bottom",
+          title: message,
+          status: "error",
+          duration: 7000,
+          isClosable: true,
+        });
+
+      fileRejections
+        .flatMap((r) => r.errors)
+        .map((error) => error.code)
+        .filter((code, i, arr) => arr.indexOf(code) === i)
+        .forEach((code) => {
+          switch (code) {
+            case "file-too-large": {
+              return displayToast(
+                "The file is too large. Please use an image less than 3 MB in size."
+              );
+            }
+            case "file-invalid-type": {
+              return displayToast(
+                "Invalid file type. Supported types are JPEG, PNG and WEBP."
+              );
+            }
+            case "too-many-files": {
+              return displayToast(
+                "Too many files provided. Only one is supported."
+              );
+            }
+            default:
+              displayToast("Someting went wrong.");
+          }
+        });
+    },
+    [toast]
+  );
+
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: "image/jpeg, image/png, image/webp",
     onDrop,
+    onDropRejected,
+    maxSize: 3 * 10e5, // 3 MB,
+    maxFiles: 1,
   });
 
   return (
