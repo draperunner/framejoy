@@ -19,14 +19,14 @@ import firebase from "firebase/app";
 import "firebase/storage";
 import "firebase/functions";
 
-const functions = firebase.functions();
+const functions = firebase.app().functions("europe-west1");
 
 if (window.location.hostname === "localhost") {
   console.log("Using emulator");
   functions.useEmulator("localhost", 5001);
 }
 
-const frameImage = functions.httpsCallable("frameImage");
+const frameImage = functions.httpsCallable("frameImage", {});
 
 function distribute<T>(array: T[], desiredArrayCount: number): T[][] {
   const distribution: T[][] = new Array(desiredArrayCount)
