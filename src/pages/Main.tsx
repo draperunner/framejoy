@@ -60,6 +60,18 @@ export const Main: React.FC = () => {
   const { hasCopied, onCopy } = useClipboard(selectedImage);
   const toast = useToast();
 
+  const errorToast = useCallback(
+    (message: string) =>
+      toast({
+        position: "bottom",
+        title: message,
+        status: "error",
+        duration: 7000,
+        isClosable: true,
+      }),
+    [toast]
+  );
+
   useEffect(() => {
     if (selectedImage) {
       onCopy();
@@ -77,31 +89,29 @@ export const Main: React.FC = () => {
     }
   }, [toast, hasCopied]);
 
-  const onDrop = useCallback(async (acceptedFiles: File[]) => {
-    const file = acceptedFiles[0];
-    if (!file) return;
+  const onDrop = useCallback(
+    async (acceptedFiles: File[]) => {
+      const file = acceptedFiles[0];
+      if (!file) return;
 
-    setSubmitted(true);
+      setSubmitted(true);
 
-    const fileData = await fileToBase64(file);
-    const result = await frameImage({
-      data: fileData,
-    });
+      try {
+        const fileData = await fileToBase64(file);
+        const result = await frameImage({
+          data: fileData,
+        });
 
-    setFramedFiles(result.data);
-  }, []);
+        setFramedFiles(result.data);
+      } catch (error) {
+        errorToast("Something went wrong.");
+      }
+    },
+    [errorToast]
+  );
 
   const onDropRejected = useCallback(
     async (fileRejections: FileRejection[]) => {
-      const displayToast = (message: string) =>
-        toast({
-          position: "bottom",
-          title: message,
-          status: "error",
-          duration: 7000,
-          isClosable: true,
-        });
-
       fileRejections
         .flatMap((r) => r.errors)
         .map((error) => error.code)
@@ -109,26 +119,26 @@ export const Main: React.FC = () => {
         .forEach((code) => {
           switch (code) {
             case "file-too-large": {
-              return displayToast(
+              return errorToast(
                 "The file is too large. Please use an image less than 3 MB in size."
               );
             }
             case "file-invalid-type": {
-              return displayToast(
+              return errorToast(
                 "Invalid file type. Supported types are JPEG, PNG and WEBP."
               );
             }
             case "too-many-files": {
-              return displayToast(
+              return errorToast(
                 "Too many files provided. Only one is supported."
               );
             }
             default:
-              displayToast("Someting went wrong.");
+              errorToast("Someting went wrong.");
           }
         });
     },
-    [toast]
+    [errorToast]
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({

@@ -121,7 +121,7 @@ export const frameImage = functions
 
     if (!data || !new RegExp("^data:image/(png|jpeg|webp)").test(data)) {
       throw new functions.https.HttpsError(
-        "failed-precondition",
+        "invalid-argument",
         "Invalid input data."
       );
     }
