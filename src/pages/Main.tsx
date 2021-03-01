@@ -9,7 +9,6 @@ import {
   ScaleFade,
   SimpleGrid,
   Skeleton,
-  Grid,
   useClipboard,
   useToast,
 } from "@chakra-ui/react";
@@ -155,11 +154,11 @@ export const Main: React.FC = () => {
         <Heading as="h1" marginBottom="2rem">
           Enjoy! 💁‍♂️
         </Heading>
-        <Grid templateColumns="repeat(3, 1fr)" templateRows="masonry">
+        <SimpleGrid columns={[1, null, 2, 3]} templateRows="masonry">
           {distribute(framedFiles, 3).map((group, i) => (
             <Box key={i}>
               {group.map((url) => (
-                <Container width="400px" key={url} marginBottom="2rem">
+                <Container key={url} marginBottom="2rem">
                   <Image
                     src={url}
                     alt="Framed image"
@@ -173,7 +172,7 @@ export const Main: React.FC = () => {
               ))}
             </Box>
           ))}
-        </Grid>
+        </SimpleGrid>
       </ScaleFade>
       <ScaleFade in={!framedFiles.length && submitted} unmountOnExit>
         <Heading as="h1" marginBottom="2rem">
