@@ -191,9 +191,6 @@ export const Main: React.FC = () => {
         </SimpleGrid>
       </ScaleFade>
       <ScaleFade in={!framedFiles.length && !submitted} unmountOnExit>
-        <Heading as="h1" marginBottom="2rem">
-          Framejoy
-        </Heading>
         <Box
           {...getRootProps()}
           borderRadius="xl"
@@ -201,22 +198,27 @@ export const Main: React.FC = () => {
           backgroundColor={isDragActive ? "blue.50" : "transparent"}
           borderColor="blue.500"
           borderWidth="thick"
-          padding="4rem"
+          padding={16}
         >
-          <input {...getInputProps()} />
-          <Image
-            src="/front-image.webp"
-            alt="Your image plus a frame equals awesome combo!"
-          />
-          <Text textAlign="center" color="blue.600">
-            Drop an image or click here to see it framed!
-          </Text>
-        </Box>
-        <Box marginTop="4rem">
-          <Text textAlign="center" fontSize="small">
-            Generated images are stored for one day. Your uploaded image is not
-            stored at all.
-          </Text>
+          <Container>
+            <Heading as="h1" marginBottom="2rem">
+              Framejoy
+            </Heading>
+            <input {...getInputProps()} />
+            <Image
+              src="/front-image.webp"
+              alt="Your image plus a frame equals awesome combo!"
+            />
+            <Text textAlign="center" color="blue.600" marginTop={8}>
+              Drop an image or click here to see it framed!
+            </Text>
+            <Box marginTop={4}>
+              <Text textAlign="center" fontSize="small">
+                Generated images are stored for one day. Your uploaded image is
+                not stored at all.
+              </Text>
+            </Box>
+          </Container>
         </Box>
       </ScaleFade>
     </VStack>
