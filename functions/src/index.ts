@@ -142,13 +142,12 @@ export const frameImage = functions
 
     const framedImageUrls = await Promise.all(
       sortedFrames.map(async (frame) => {
-        const content = await sharp(fileBuffer)
-          .resize(frame.width, frame.height)
-          .rotate(frame.rotation, { background: "rgba(0, 0, 0, 0)" })
-          .webp()
-          .toBuffer();
-
-        const [background, foreground] = await Promise.all([
+        const [content, background, foreground] = await Promise.all([
+          sharp(fileBuffer)
+            .resize(frame.width, frame.height)
+            .rotate(frame.rotation, { background: "rgba(0, 0, 0, 0)" })
+            .webp()
+            .toBuffer(),
           downloadFrame(frame.background),
           frame.foreground ? downloadFrame(frame.foreground) : undefined,
         ]);
