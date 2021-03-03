@@ -136,6 +136,7 @@ export const frameImage = functions
       sortedFrames.map(async (frame) => {
         const [content, background, foreground] = await Promise.all([
           fileSharp
+            .clone()
             .resize(frame.width, frame.height)
             .rotate(frame.rotation, { background: "rgba(0, 0, 0, 0)" })
             .webp()
