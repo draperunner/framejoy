@@ -88,21 +88,12 @@ const frames: Frame[] = [
   },
 ];
 
-const cache: Record<string, Buffer> = {};
-
 async function downloadFrame(path: string): Promise<Buffer> {
-  if (cache[path]) {
-    console.log("Using cached", path);
-    return cache[path];
-  }
-
   const [buffer] = await admin
     .storage()
     .bucket("framejoy-frames")
     .file(path)
     .download();
-
-  cache[path] = buffer;
   return buffer;
 }
 
