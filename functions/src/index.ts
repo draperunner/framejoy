@@ -119,7 +119,8 @@ export const frameImage = functions
 
     const dataWithoutPrefix = data.replace(/^data:.+;base64,/, "");
     const fileBuffer = Buffer.from(dataWithoutPrefix, "base64");
-    const { width = 1, height = 1 } = await sharp(fileBuffer).metadata();
+    const fileSharp = sharp(fileBuffer);
+    const { width = 1, height = 1 } = await fileSharp.metadata();
     const aspectRatio = width / height;
     const fileId = uuid();
 
@@ -134,7 +135,7 @@ export const frameImage = functions
     const framedImageUrls = await Promise.all(
       sortedFrames.map(async (frame) => {
         const [content, background, foreground] = await Promise.all([
-          sharp(fileBuffer)
+          fileSharp
             .resize(frame.width, frame.height)
             .rotate(frame.rotation, { background: "rgba(0, 0, 0, 0)" })
             .webp()
