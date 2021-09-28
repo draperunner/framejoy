@@ -100,7 +100,7 @@ async function downloadFrame(path: string): Promise<Buffer> {
 export const frameImage = functions
   .region("europe-west1")
   .runWith({
-    memory: "1GB",
+    memory: "2GB",
   })
   .https.onCall(async ({ data }, context) => {
     if (!context.auth) {
