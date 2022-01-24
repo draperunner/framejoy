@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import firebase from "firebase/app";
 
-import "firebase/analytics";
 import "firebase/auth";
 
 const firebaseConfig = {
