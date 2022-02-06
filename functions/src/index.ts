@@ -93,7 +93,7 @@ async function downloadFrame(path: string): Promise<Buffer> {
     .storage()
     .bucket("framejoy-frames")
     .file(path)
-    .download();
+    .download({ validation: !process.env.FUNCTIONS_EMULATOR });
   return buffer;
 }
 
