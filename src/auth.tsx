@@ -14,15 +14,22 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
+const auth = firebase.auth();
+
+if (window.location.hostname === "localhost") {
+  console.log("Using auth emulator");
+  auth.useEmulator("http://localhost:9099");
+}
+
 function useAnonymousLogin() {
   const [user, setUser] = useState<firebase.User | null | undefined>();
 
   useEffect(() => {
-    return firebase.auth().onAuthStateChanged((user) => {
+    return auth.onAuthStateChanged((user) => {
       setUser(user);
 
       if (!user) {
-        firebase.auth().signInAnonymously().catch(console.error);
+        auth.signInAnonymously().catch(console.error);
         return;
       }
     });

@@ -21,7 +21,7 @@ import "firebase/functions";
 const functions = firebase.app().functions("europe-west1");
 
 if (window.location.hostname === "localhost") {
-  console.log("Using emulator");
+  console.log("Using functions emulator");
   functions.useEmulator("localhost", 5001);
 }
 
