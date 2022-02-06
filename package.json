@@ -34,7 +34,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint --ext .js,.ts src scripts functions",
-    "framify": "node --require ts-node/register/transpile-only scripts/framify.ts && open output.jpg"
+    "framify": "node --require ts-node/register/transpile-only scripts/framify.ts && open output.jpg",
+    "emulators": "firebase emulators:start --import ./emulator-dump"
   },
   "eslintConfig": {
     "extends": "react-app"
