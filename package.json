@@ -2,6 +2,10 @@
   "name": "framejoy",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "16",
+    "npm": "8"
+  },
   "dependencies": {
     "@chakra-ui/react": "^1.3.3",
     "@emotion/react": "^11.1.5",
@@ -10,7 +14,7 @@
     "@testing-library/react": "^10.4.9",
     "@testing-library/user-event": "^12.7.3",
     "@types/jest": "^25.2.3",
-    "@types/node": "^12.20.4",
+    "@types/node": "^16.11.27",
     "@types/react": "^16.14.4",
     "@types/react-dom": "^16.9.11",
     "firebase": "^8.2.9",
@@ -19,9 +23,9 @@
     "react-dom": "^17.0.1",
     "react-dropzone": "^11.3.1",
     "react-icons": "^3.11.0",
-    "react-scripts": "4.0.3",
-    "sharp": "^0.27.2",
-    "typescript": "^3.9.9",
+    "react-scripts": "5.0.0",
+    "sharp": "^0.30.0",
+    "typescript": "^4.6.3",
     "web-vitals": "^0.2.4"
   },
   "scripts": {
