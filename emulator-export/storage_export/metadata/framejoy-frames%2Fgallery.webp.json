@@ -1,0 +1,20 @@
+{
+  "name": "gallery.webp",
+  "bucket": "framejoy-frames",
+  "contentType": "image/webp",
+  "metageneration": 1,
+  "generation": 1652476047433,
+  "storageClass": "STANDARD",
+  "contentDisposition": "inline",
+  "cacheControl": "public, max-age=3600",
+  "contentEncoding": "identity",
+  "downloadTokens": [
+    "4e9498b4-78e3-49f4-9104-411959326a0c"
+  ],
+  "etag": "iVv2Fd9huzHcKecAUSixCXedQfQ",
+  "timeCreated": "2022-05-13T21:07:27.432Z",
+  "updated": "2022-05-13T21:07:27.435Z",
+  "size": 110686,
+  "md5Hash": "xofqofocGdvo9N+nlehfKw==",
+  "crc32c": "4076453967"
+}

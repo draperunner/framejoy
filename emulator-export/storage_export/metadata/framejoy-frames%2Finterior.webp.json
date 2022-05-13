@@ -1,0 +1,20 @@
+{
+  "name": "interior.webp",
+  "bucket": "framejoy-frames",
+  "contentType": "image/webp",
+  "metageneration": 1,
+  "generation": 1652476047512,
+  "storageClass": "STANDARD",
+  "contentDisposition": "inline",
+  "cacheControl": "public, max-age=3600",
+  "contentEncoding": "identity",
+  "downloadTokens": [
+    "a83afae6-52c9-4492-b146-a0887ffca0fa"
+  ],
+  "etag": "uix4fjS897hMJgklhrSC/XKkLEg",
+  "timeCreated": "2022-05-13T21:07:27.512Z",
+  "updated": "2022-05-13T21:07:27.512Z",
+  "size": 111536,
+  "md5Hash": "mNOhL3GcarRmCCjp1I4cMA==",
+  "crc32c": "4212799715"
+}

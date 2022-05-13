@@ -1,0 +1,20 @@
+{
+  "name": "phone.webp",
+  "bucket": "framejoy-frames",
+  "contentType": "image/webp",
+  "metageneration": 1,
+  "generation": 1652476047484,
+  "storageClass": "STANDARD",
+  "contentDisposition": "inline",
+  "cacheControl": "public, max-age=3600",
+  "contentEncoding": "identity",
+  "downloadTokens": [
+    "9e2b20d1-361c-4a31-a801-4737da7e8ad0"
+  ],
+  "etag": "EmVAUor8iwJBtyfM3NpelSIWfQ8",
+  "timeCreated": "2022-05-13T21:07:27.483Z",
+  "updated": "2022-05-13T21:07:27.484Z",
+  "size": 97412,
+  "md5Hash": "XHKQRTijAzxJNyt/POWhEQ==",
+  "crc32c": "2421641811"
+}

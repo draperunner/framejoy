@@ -1,0 +1,20 @@
+{
+  "name": "gallery_foreground.webp",
+  "bucket": "framejoy-frames",
+  "contentType": "image/webp",
+  "metageneration": 1,
+  "generation": 1652476047469,
+  "storageClass": "STANDARD",
+  "contentDisposition": "inline",
+  "cacheControl": "public, max-age=3600",
+  "contentEncoding": "identity",
+  "downloadTokens": [
+    "d7d88411-6c84-4f4b-8dbd-abce31f03fc7"
+  ],
+  "etag": "uebPjgSxAx/NQe7EL3k2EagF2cg",
+  "timeCreated": "2022-05-13T21:07:27.468Z",
+  "updated": "2022-05-13T21:07:27.468Z",
+  "size": 15732,
+  "md5Hash": "SWfC1nNBN1wgN0+bGNq9dg==",
+  "crc32c": "2594240902"
+}

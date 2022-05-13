@@ -1,0 +1,20 @@
+{
+  "name": "tv.webp",
+  "bucket": "framejoy-frames",
+  "contentType": "image/webp",
+  "metageneration": 1,
+  "generation": 1652476047531,
+  "storageClass": "STANDARD",
+  "contentDisposition": "inline",
+  "cacheControl": "public, max-age=3600",
+  "contentEncoding": "identity",
+  "downloadTokens": [
+    "1aa293cf-12f1-418f-99f5-41f1d027ee6d"
+  ],
+  "etag": "8QyVfigag2stPBx35Ort3EWKiLA",
+  "timeCreated": "2022-05-13T21:07:27.530Z",
+  "updated": "2022-05-13T21:07:27.531Z",
+  "size": 131298,
+  "md5Hash": "3b0jiiTonRCVH3mZ7FSTRg==",
+  "crc32c": "2611558166"
+}

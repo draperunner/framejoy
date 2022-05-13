@@ -1,9 +1,13 @@
 import * as functions from "firebase-functions";
-import admin from "firebase-admin";
 import sharp, { OverlayOptions } from "sharp";
 import { v4 as uuid } from "uuid";
 
-admin.initializeApp();
+import { initializeApp } from "firebase-admin/app";
+import { getStorage } from "firebase-admin/storage";
+
+initializeApp();
+
+const storage = getStorage();
 
 type Frame = {
   id: string;
@@ -89,8 +93,7 @@ const frames: Frame[] = [
 ];
 
 async function downloadFrame(path: string): Promise<Buffer> {
-  const [buffer] = await admin
-    .storage()
+  const [buffer] = await storage
     .bucket("framejoy-frames")
     .file(path)
     .download({ validation: !process.env.FUNCTIONS_EMULATOR });
@@ -165,8 +168,7 @@ export const frameImage = functions
           .jpeg()
           .toBuffer();
 
-        const bucket = admin.storage().bucket();
-        const frameFile = bucket.file(`${fileId}-${frame.id}.jpg`);
+        const frameFile = storage.bucket().file(`${fileId}-${frame.id}.jpg`);
 
         await frameFile.save(compositeImage);
         await frameFile.makePublic();
