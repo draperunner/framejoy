@@ -54,9 +54,11 @@ function fileToBase64(file: File): Promise<string> {
 export const Main: React.FC = () => {
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [framedFiles, setFramedFiles] = useState<string[]>([]);
+  const [copied, setCopied] = useState<boolean>(false);
 
   const [selectedImage, setSelectedImage] = useState<string>("");
-  const { hasCopied, onCopy } = useClipboard(selectedImage);
+  const { onCopy } = useClipboard(selectedImage);
+
   const toast = useToast();
 
   const errorToast = useCallback(
@@ -72,13 +74,14 @@ export const Main: React.FC = () => {
   );
 
   useEffect(() => {
-    if (selectedImage) {
-      onCopy();
-    }
-  }, [selectedImage, onCopy]);
+    // Reset copied state when another image is selected
+    setCopied(false);
+  }, [selectedImage]);
 
   useEffect(() => {
-    if (hasCopied) {
+    if (selectedImage && !copied) {
+      setCopied(true);
+      onCopy();
       toast({
         position: "bottom",
         title: "Image URL copied!",
@@ -86,7 +89,7 @@ export const Main: React.FC = () => {
         duration: 1000,
       });
     }
-  }, [toast, hasCopied]);
+  }, [selectedImage, copied, onCopy]);
 
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
