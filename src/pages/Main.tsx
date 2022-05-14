@@ -140,7 +140,17 @@ export const Main: React.FC = () => {
     async (url: string) => {
       const blobRef = ref(storage, url);
       const blob = await getBlob(blobRef);
-      saveAs(blob, "framed-image.jpg");
+      const fileName = "framed-image.jpg";
+
+      const shareData: ShareData = {
+        files: [new File([blob], fileName)],
+      };
+
+      if (navigator.canShare && navigator.canShare(shareData)) {
+        await navigator.share(shareData);
+      } else {
+        saveAs(blob, "framed-image.jpg");
+      }
     },
     [storage]
   );
