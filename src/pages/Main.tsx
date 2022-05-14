@@ -14,18 +14,28 @@ import {
 } from "@chakra-ui/react";
 import { FileRejection, useDropzone } from "react-dropzone";
 
-import firebase from "firebase/app";
-import "firebase/storage";
-import "firebase/functions";
+import { getApp } from "firebase/app";
+import {
+  getFunctions,
+  connectFunctionsEmulator,
+  httpsCallable,
+} from "firebase/functions";
+import { getStorage, connectStorageEmulator, ref } from "firebase/storage";
 
-const functions = firebase.app().functions("europe-west1");
+const functions = getFunctions(getApp(), "europe-west1");
+const storage = getStorage();
 
 if (window.location.hostname === "localhost") {
   console.log("Using functions emulator");
-  functions.useEmulator("localhost", 5001);
+  connectFunctionsEmulator(functions, "localhost", 5001);
+  connectStorageEmulator(storage, "localhost", 9199);
 }
 
-const frameImage = functions.httpsCallable("frameImage", {});
+const frameImage = httpsCallable<{ data: string }, string[]>(
+  functions,
+  "frameImage",
+  {}
+);
 
 function distribute<T>(array: T[], desiredArrayCount: number): T[][] {
   const distribution: T[][] = new Array(desiredArrayCount)

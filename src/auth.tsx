@@ -1,7 +1,11 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import firebase from "firebase/app";
-
-import "firebase/auth";
+import { initializeApp } from "firebase/app";
+import {
+  getAuth,
+  connectAuthEmulator,
+  User,
+  signInAnonymously,
+} from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBWEPtFzrjR-oT0M8r4PPQyYh_h3zJd2wQ",
@@ -12,24 +16,24 @@ const firebaseConfig = {
   appId: "1:135638107642:web:1f751682fdd3994f7bd043",
 };
 
-firebase.initializeApp(firebaseConfig);
+initializeApp(firebaseConfig);
 
-const auth = firebase.auth();
+const auth = getAuth();
 
 if (window.location.hostname === "localhost") {
   console.log("Using auth emulator");
-  auth.useEmulator("http://localhost:9099");
+  connectAuthEmulator(auth, "http://localhost:9099");
 }
 
 function useAnonymousLogin() {
-  const [user, setUser] = useState<firebase.User | null | undefined>();
+  const [user, setUser] = useState<User | null | undefined>();
 
   useEffect(() => {
     return auth.onAuthStateChanged((user) => {
       setUser(user);
 
       if (!user) {
-        auth.signInAnonymously().catch(console.error);
+        signInAnonymously(auth).catch(console.error);
         return;
       }
     });
@@ -40,7 +44,7 @@ function useAnonymousLogin() {
   };
 }
 
-const UserContext = createContext<firebase.User | null | undefined>(null);
+const UserContext = createContext<User | null | undefined>(null);
 
 export const UserProvider: React.FC = (props) => {
   const { user } = useAnonymousLogin();
