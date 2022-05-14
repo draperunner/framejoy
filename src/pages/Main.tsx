@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback } from "react";
 import {
   Box,
   Container,
@@ -9,10 +9,10 @@ import {
   ScaleFade,
   SimpleGrid,
   Skeleton,
-  useClipboard,
   useToast,
 } from "@chakra-ui/react";
 import { FileRejection, useDropzone } from "react-dropzone";
+import { saveAs } from "file-saver";
 
 import { getApp } from "firebase/app";
 import {
@@ -20,13 +20,18 @@ import {
   connectFunctionsEmulator,
   httpsCallable,
 } from "firebase/functions";
-import { getStorage, connectStorageEmulator, ref } from "firebase/storage";
+import {
+  getStorage,
+  connectStorageEmulator,
+  ref,
+  getBlob,
+} from "firebase/storage";
 
 const functions = getFunctions(getApp(), "europe-west1");
 const storage = getStorage();
 
 if (window.location.hostname === "localhost") {
-  console.log("Using functions emulator");
+  console.log("Using functions and storage emulators");
   connectFunctionsEmulator(functions, "localhost", 5001);
   connectStorageEmulator(storage, "localhost", 9199);
 }
@@ -64,10 +69,6 @@ function fileToBase64(file: File): Promise<string> {
 export const Main: React.FC = () => {
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [framedFiles, setFramedFiles] = useState<string[]>([]);
-  const [copied, setCopied] = useState<boolean>(false);
-
-  const [selectedImage, setSelectedImage] = useState<string>("");
-  const { onCopy } = useClipboard(selectedImage);
 
   const toast = useToast();
 
@@ -82,24 +83,6 @@ export const Main: React.FC = () => {
       }),
     [toast]
   );
-
-  useEffect(() => {
-    // Reset copied state when another image is selected
-    setCopied(false);
-  }, [selectedImage]);
-
-  useEffect(() => {
-    if (selectedImage && !copied) {
-      setCopied(true);
-      onCopy();
-      toast({
-        position: "bottom",
-        title: "Image URL copied!",
-        status: "success",
-        duration: 1000,
-      });
-    }
-  }, [selectedImage, copied, onCopy]);
 
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
@@ -146,11 +129,20 @@ export const Main: React.FC = () => {
               );
             }
             default:
-              errorToast("Someting went wrong.");
+              errorToast("Something went wrong.");
           }
         });
     },
     [errorToast]
+  );
+
+  const download = useCallback(
+    async (url: string) => {
+      const blobRef = ref(storage, url);
+      const blob = await getBlob(blobRef);
+      saveAs(blob, "framed-image.jpg");
+    },
+    [storage]
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -179,7 +171,7 @@ export const Main: React.FC = () => {
                     cursor="pointer"
                     border="0.25rem solid transparent"
                     _hover={{ borderColor: "blue.500" }}
-                    onClick={() => setSelectedImage(url)}
+                    onClick={() => download(url)}
                   />
                 </Container>
               ))}
