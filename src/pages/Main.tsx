@@ -181,14 +181,14 @@ export const Main: React.FC = () => {
         <Heading as="h1" marginBottom="2rem">
           Cutting and glueing ... ✂️
         </Heading>
-        <SimpleGrid columns={3}>
-          <Container minWidth="400px">
+        <SimpleGrid columns={{ sm: 1, md: 2, lg: 3 }} spacing="1rem">
+          <Container minWidth="sm">
             <Skeleton height="245px" />
           </Container>
-          <Container minWidth="400px">
+          <Container minWidth="sm">
             <Skeleton height="460px" />
           </Container>
-          <Container minWidth="400px">
+          <Container minWidth="sm">
             <Skeleton height="245px" />
           </Container>
         </SimpleGrid>
