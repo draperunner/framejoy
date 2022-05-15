@@ -10,6 +10,7 @@ import {
   SimpleGrid,
   Skeleton,
   useToast,
+  Button,
 } from "@chakra-ui/react";
 import { FileRejection, useDropzone } from "react-dropzone";
 import { saveAs } from "file-saver";
@@ -155,87 +156,93 @@ export const Main: React.FC = () => {
     [storage]
   );
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+  const { getRootProps, getInputProps, open, isDragActive } = useDropzone({
     accept: "image/jpeg, image/png, image/webp",
     onDrop,
     onDropRejected,
     maxSize: 3 * 10e5, // 3 MB,
     maxFiles: 1,
+    noClick: true,
+    noKeyboard: true,
+    disabled: submitted,
   });
 
   return (
-    <VStack spacing={8}>
-      <ScaleFade in={framedFiles.length > 0} unmountOnExit>
-        <Heading as="h1" marginBottom="2rem">
-          Enjoy! 💁‍♂️
-        </Heading>
-        <SimpleGrid columns={[1, null, 2, 3]} templateRows="masonry">
-          {distribute(framedFiles, 3).map((group, i) => (
-            <Box key={i}>
-              {group.map((url) => (
-                <Container key={url} marginBottom="2rem">
-                  <Image
-                    src={url}
-                    alt="Framed image"
-                    borderRadius="md"
-                    cursor="pointer"
-                    border="0.25rem solid transparent"
-                    _hover={{ borderColor: "blue.500" }}
-                    onClick={() => download(url)}
-                  />
-                </Container>
-              ))}
-            </Box>
-          ))}
-        </SimpleGrid>
-      </ScaleFade>
-      <ScaleFade in={!framedFiles.length && submitted} unmountOnExit>
-        <Heading as="h1" marginBottom="2rem">
-          Cutting and glueing ... ✂️
-        </Heading>
-        <SimpleGrid columns={{ sm: 1, md: 2, lg: 3 }} spacing="1rem">
-          <Container minWidth="sm">
-            <Skeleton height="245px" />
-          </Container>
-          <Container minWidth="sm">
-            <Skeleton height="460px" />
-          </Container>
-          <Container minWidth="sm">
-            <Skeleton height="245px" />
-          </Container>
-        </SimpleGrid>
-      </ScaleFade>
-      <ScaleFade in={!framedFiles.length && !submitted} unmountOnExit>
-        <Box
-          {...getRootProps()}
-          borderRadius="xl"
-          borderStyle="dashed"
-          backgroundColor={isDragActive ? "blue.50" : "transparent"}
-          borderColor="blue.500"
-          borderWidth="thick"
-          padding={16}
-        >
-          <Container>
-            <Heading as="h1" marginBottom="2rem">
-              Framejoy
-            </Heading>
-            <input {...getInputProps()} />
-            <Image
-              src="/front-image.webp"
-              alt="Your image plus a frame equals awesome combo!"
-            />
-            <Text textAlign="center" color="blue.600" marginTop={8}>
-              Drop an image or click here to see it framed!
-            </Text>
-            <Box marginTop={4}>
-              <Text textAlign="center" fontSize="small">
-                Generated images are stored for one day. Your uploaded image is
-                not stored at all.
+    <Box
+      textAlign="center"
+      fontSize="xl"
+      paddingTop={8}
+      {...getRootProps()}
+      backgroundColor={isDragActive ? "blue.50" : "transparent"}
+      minHeight="100vh"
+      cursor="default"
+    >
+      <VStack spacing={8}>
+        <ScaleFade in={framedFiles.length > 0} unmountOnExit>
+          <Heading as="h1" marginBottom="2rem">
+            Enjoy! 💁‍♂️
+          </Heading>
+          <SimpleGrid columns={[1, null, 2, 3]} templateRows="masonry">
+            {distribute(framedFiles, 3).map((group, i) => (
+              <Box key={i}>
+                {group.map((url) => (
+                  <Container key={url} marginBottom="2rem">
+                    <Image
+                      src={url}
+                      alt="Framed image"
+                      borderRadius="md"
+                      cursor="pointer"
+                      border="0.25rem solid transparent"
+                      _hover={{ borderColor: "blue.500" }}
+                      onClick={() => download(url)}
+                    />
+                  </Container>
+                ))}
+              </Box>
+            ))}
+          </SimpleGrid>
+        </ScaleFade>
+        <ScaleFade in={!framedFiles.length && submitted} unmountOnExit>
+          <Heading as="h1" marginBottom="2rem">
+            Cutting and glueing ... ✂️
+          </Heading>
+          <SimpleGrid columns={{ sm: 1, md: 2, lg: 3 }} spacing="1rem">
+            <Container minWidth="sm">
+              <Skeleton height="245px" />
+            </Container>
+            <Container minWidth="sm">
+              <Skeleton height="460px" />
+            </Container>
+            <Container minWidth="sm">
+              <Skeleton height="245px" />
+            </Container>
+          </SimpleGrid>
+        </ScaleFade>
+        <ScaleFade in={!framedFiles.length && !submitted} unmountOnExit>
+          <Box padding={16}>
+            <Container>
+              <Heading as="h1" marginBottom="2rem">
+                Framejoy
+              </Heading>
+              <input {...getInputProps()} />
+              <Image
+                src="/front-image.webp"
+                alt="Your image plus a frame equals awesome combo!"
+              />
+              <Text textAlign="center" color="blue.600" marginTop={8}>
+                Drop an image anywhere or <Button onClick={open}>browse</Button>
               </Text>
-            </Box>
-          </Container>
-        </Box>
-      </ScaleFade>
-    </VStack>
+
+              <Box marginTop={4}>
+                <Text textAlign="center" fontSize="small">
+                  Generated images are stored for one day. Your uploaded image
+                  is not stored at all.
+                </Text>
+              </Box>
+            </Container>
+          </Box>
+        </ScaleFade>
+      </VStack>
+    </Box>
   );
 };
