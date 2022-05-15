@@ -172,6 +172,7 @@ export const Main: React.FC = () => {
       textAlign="center"
       fontSize="xl"
       paddingTop={8}
+      paddingBottom={8}
       {...getRootProps()}
       backgroundColor={isDragActive ? "blue.50" : "transparent"}
       minHeight="100vh"
@@ -201,6 +202,14 @@ export const Main: React.FC = () => {
               </Box>
             ))}
           </SimpleGrid>
+          <Button
+            onClick={() => {
+              setSubmitted(false);
+              setFramedFiles([]);
+            }}
+          >
+            Try a new image
+          </Button>
         </ScaleFade>
         <ScaleFade in={!framedFiles.length && submitted} unmountOnExit>
           <Heading as="h1" marginBottom="2rem">
