@@ -1,6 +1,5 @@
 import * as functions from "firebase-functions";
 import sharp, { OverlayOptions } from "sharp";
-import { v4 as uuid } from "uuid";
 
 import { initializeApp } from "firebase-admin/app";
 import { getStorage } from "firebase-admin/storage";
@@ -125,7 +124,6 @@ export const frameImage = functions
     const fileSharp = sharp(fileBuffer).webp();
     const { width = 1, height = 1 } = await fileSharp.metadata();
     const aspectRatio = width / height;
-    const fileId = uuid();
 
     const sortedFrames = [...frames]
       .sort((a, b) => {
@@ -135,7 +133,7 @@ export const frameImage = functions
       })
       .slice(0, 6);
 
-    const framedImageUrls = await Promise.all(
+    const framedImageData = await Promise.all(
       sortedFrames.map(async (frame) => {
         const [content, background, foreground] = await Promise.all([
           fileSharp
@@ -168,13 +166,9 @@ export const frameImage = functions
           .jpeg()
           .toBuffer();
 
-        const frameFile = storage.bucket().file(`${fileId}-${frame.id}.jpg`);
-
-        await frameFile.save(compositeImage);
-        await frameFile.makePublic();
-        return frameFile.publicUrl();
+        return "data:image/jpeg;base64," + compositeImage.toString("base64");
       })
     );
 
-    return framedImageUrls;
+    return framedImageData;
   });

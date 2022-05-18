@@ -25,20 +25,12 @@ import {
   connectFunctionsEmulator,
   httpsCallable,
 } from "firebase/functions";
-import {
-  getStorage,
-  connectStorageEmulator,
-  ref,
-  getBlob,
-} from "firebase/storage";
 
 const functions = getFunctions(getApp(), "europe-west1");
-const storage = getStorage();
 
 if (window.location.hostname === "localhost") {
-  console.log("Using functions and storage emulators");
+  console.log("Using functions emulator");
   connectFunctionsEmulator(functions, "localhost", 5001);
-  connectStorageEmulator(storage, "localhost", 9199);
 }
 
 const frameImage = httpsCallable<{ data: string }, string[]>(
@@ -73,7 +65,7 @@ function fileToBase64(file: File): Promise<string> {
 
 export const App = () => {
   const [submitted, setSubmitted] = useState<boolean>(false);
-  const [framedFiles, setFramedFiles] = useState<string[]>([]);
+  const [framedImages, setFramedImages] = useState<string[]>([]);
 
   const toast = useToast();
 
@@ -102,7 +94,7 @@ export const App = () => {
           data: fileData,
         });
 
-        setFramedFiles(result.data);
+        setFramedImages(result.data);
       } catch (error) {
         errorToast("Something went wrong.");
       }
@@ -141,24 +133,20 @@ export const App = () => {
     [errorToast]
   );
 
-  const download = useCallback(
-    async (url: string) => {
-      const blobRef = ref(storage, url);
-      const blob = await getBlob(blobRef);
-      const fileName = "framed-image.jpg";
+  const shareOrDownload = useCallback(async (imageData: string) => {
+    const blob = await fetch(imageData).then((res) => res.blob());
+    const fileName = "framed-image.jpg";
 
-      const shareData: ShareData = {
-        files: [new File([blob], fileName)],
-      };
+    const shareData: ShareData = {
+      files: [new File([blob], fileName)],
+    };
 
-      if (navigator.canShare && navigator.canShare(shareData)) {
-        await navigator.share(shareData);
-      } else {
-        saveAs(blob, "framed-image.jpg");
-      }
-    },
-    [storage]
-  );
+    if (navigator.canShare && navigator.canShare(shareData)) {
+      await navigator.share(shareData);
+    } else {
+      saveAs(blob, fileName);
+    }
+  }, []);
 
   const { getRootProps, getInputProps, open, isDragActive } = useDropzone({
     accept: "image/jpeg, image/png, image/webp",
@@ -170,6 +158,7 @@ export const App = () => {
     noKeyboard: true,
     disabled: submitted,
   });
+
   return (
     <ChakraProvider theme={theme}>
       <UserProvider>
@@ -184,23 +173,23 @@ export const App = () => {
           cursor="default"
         >
           <VStack spacing={8}>
-            <ScaleFade in={framedFiles.length > 0} unmountOnExit>
+            <ScaleFade in={framedImages.length > 0} unmountOnExit>
               <Heading as="h1" marginBottom="2rem">
                 Enjoy! 💁‍♂️
               </Heading>
               <SimpleGrid columns={[1, null, 2, 3]} templateRows="masonry">
-                {distribute(framedFiles, 3).map((group, i) => (
+                {distribute(framedImages, 3).map((group, i) => (
                   <Box key={i}>
-                    {group.map((url) => (
-                      <Container key={url} marginBottom="2rem">
+                    {group.map((imageData) => (
+                      <Container key={imageData} marginBottom="2rem">
                         <Image
-                          src={url}
+                          src={imageData}
                           alt="Framed image"
                           borderRadius="md"
                           cursor="pointer"
                           border="0.25rem solid transparent"
                           _hover={{ borderColor: "blue.500" }}
-                          onClick={() => download(url)}
+                          onClick={() => shareOrDownload(imageData)}
                         />
                       </Container>
                     ))}
@@ -210,13 +199,13 @@ export const App = () => {
               <Button
                 onClick={() => {
                   setSubmitted(false);
-                  setFramedFiles([]);
+                  setFramedImages([]);
                 }}
               >
                 Try a new image
               </Button>
             </ScaleFade>
-            <ScaleFade in={!framedFiles.length && submitted} unmountOnExit>
+            <ScaleFade in={!framedImages.length && submitted} unmountOnExit>
               <Heading as="h1" marginBottom="2rem">
                 Cutting and glueing ... ✂️
               </Heading>
@@ -232,7 +221,7 @@ export const App = () => {
                 </Container>
               </SimpleGrid>
             </ScaleFade>
-            <ScaleFade in={!framedFiles.length && !submitted} unmountOnExit>
+            <ScaleFade in={!framedImages.length && !submitted} unmountOnExit>
               <Box padding={16}>
                 <Container>
                   <Heading as="h1" marginBottom="2rem">
@@ -250,8 +239,8 @@ export const App = () => {
 
                   <Box marginTop={4}>
                     <Text textAlign="center" fontSize="small">
-                      Generated images are stored for one day. Your uploaded
-                      image is not stored at all.
+                      Your uploaded image is not stored anywhere. Neither are
+                      the generated images, unless you share them!
                     </Text>
                   </Box>
                 </Container>
