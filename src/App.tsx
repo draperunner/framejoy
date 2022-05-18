@@ -1,6 +1,4 @@
 import React, { useState, useCallback } from "react";
-import { UserProvider } from "./auth";
-
 import {
   Box,
   Container,
@@ -15,6 +13,7 @@ import {
   Button,
   ChakraProvider,
   theme,
+  Link,
 } from "@chakra-ui/react";
 import { FileRejection, useDropzone } from "react-dropzone";
 import { saveAs } from "file-saver";
@@ -25,6 +24,7 @@ import {
   connectFunctionsEmulator,
   httpsCallable,
 } from "firebase/functions";
+import { UserProvider } from "./auth";
 
 const functions = getFunctions(getApp(), "europe-west1");
 
@@ -197,6 +197,7 @@ export const App = () => {
                 ))}
               </SimpleGrid>
               <Button
+                margin="1rem"
                 onClick={() => {
                   setSubmitted(false);
                   setFramedImages([]);
@@ -247,6 +248,18 @@ export const App = () => {
               </Box>
             </ScaleFade>
           </VStack>
+          <Box position="absolute" as="footer" bottom="1" left="0" right="0">
+            <Text textAlign="center" fontSize="small">
+              The code's on{" "}
+              <Link
+                href="https://github.com/draperunner/framejoy"
+                color="blue.600"
+                isExternal
+              >
+                GitHub! ⭐️
+              </Link>
+            </Text>
+          </Box>
         </Box>
       </UserProvider>
     </ChakraProvider>
