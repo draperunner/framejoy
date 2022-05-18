@@ -29,4 +29,10 @@ Then run the emulators:
 npm run emulators
 ```
 
-Go to http://localhost:5000 and enjoy!
+In another terminal, start the dev server:
+
+```
+npm start
+```
+
+Go to http://localhost:3000 and enjoy!

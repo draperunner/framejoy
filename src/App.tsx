@@ -63,7 +63,7 @@ function fileToBase64(file: File): Promise<string> {
   });
 }
 
-export const App = () => {
+const Main = () => {
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [framedImages, setFramedImages] = useState<string[]>([]);
 
@@ -160,107 +160,112 @@ export const App = () => {
   });
 
   return (
+    <Box
+      textAlign="center"
+      fontSize="xl"
+      paddingTop={8}
+      paddingBottom={8}
+      {...getRootProps()}
+      backgroundColor={isDragActive ? "blue.50" : "transparent"}
+      minHeight="100vh"
+      cursor="default"
+    >
+      <VStack spacing={8}>
+        <ScaleFade in={framedImages.length > 0} unmountOnExit>
+          <Heading as="h1" marginBottom="2rem">
+            Enjoy! 💁‍♂️
+          </Heading>
+          <SimpleGrid columns={[1, null, 2, 3]} templateRows="masonry">
+            {distribute(framedImages, 3).map((group, i) => (
+              <Box key={i}>
+                {group.map((imageData) => (
+                  <Container key={imageData} marginBottom="2rem">
+                    <Image
+                      src={imageData}
+                      alt="Framed image"
+                      borderRadius="md"
+                      cursor="pointer"
+                      border="0.25rem solid transparent"
+                      _hover={{ borderColor: "blue.500" }}
+                      onClick={() => shareOrDownload(imageData)}
+                    />
+                  </Container>
+                ))}
+              </Box>
+            ))}
+          </SimpleGrid>
+          <Button
+            margin="1rem"
+            onClick={() => {
+              setSubmitted(false);
+              setFramedImages([]);
+            }}
+          >
+            Try a new image
+          </Button>
+        </ScaleFade>
+        <ScaleFade in={!framedImages.length && submitted} unmountOnExit>
+          <Heading as="h1" marginBottom="2rem">
+            Cutting and glueing ... ✂️
+          </Heading>
+          <SimpleGrid columns={{ sm: 1, md: 2, lg: 3 }} spacing="1rem">
+            <Container minWidth="sm">
+              <Skeleton height="245px" />
+            </Container>
+            <Container minWidth="sm">
+              <Skeleton height="460px" />
+            </Container>
+            <Container minWidth="sm">
+              <Skeleton height="245px" />
+            </Container>
+          </SimpleGrid>
+        </ScaleFade>
+        <ScaleFade in={!framedImages.length && !submitted} unmountOnExit>
+          <Box padding={16}>
+            <Container>
+              <Heading as="h1" marginBottom="2rem">
+                Framejoy
+              </Heading>
+              <input {...getInputProps()} />
+              <Image
+                src="/front-image.webp"
+                alt="Your image plus a frame equals awesome combo!"
+              />
+              <Text textAlign="center" color="blue.600" marginTop={8}>
+                Drop an image anywhere or <Button onClick={open}>browse</Button>
+              </Text>
+
+              <Box marginTop={4}>
+                <Text textAlign="center" fontSize="small">
+                  Your uploaded image is not stored anywhere. Neither are the
+                  generated images, unless you share them!
+                </Text>
+              </Box>
+            </Container>
+          </Box>
+        </ScaleFade>
+      </VStack>
+      <Box position="absolute" as="footer" bottom="1" left="0" right="0">
+        <Text textAlign="center" fontSize="small">
+          The code's on{" "}
+          <Link
+            href="https://github.com/draperunner/framejoy"
+            color="blue.600"
+            isExternal
+          >
+            GitHub! ⭐️
+          </Link>
+        </Text>
+      </Box>
+    </Box>
+  );
+};
+
+export const App = () => {
+  return (
     <ChakraProvider theme={theme}>
       <UserProvider>
-        <Box
-          textAlign="center"
-          fontSize="xl"
-          paddingTop={8}
-          paddingBottom={8}
-          {...getRootProps()}
-          backgroundColor={isDragActive ? "blue.50" : "transparent"}
-          minHeight="100vh"
-          cursor="default"
-        >
-          <VStack spacing={8}>
-            <ScaleFade in={framedImages.length > 0} unmountOnExit>
-              <Heading as="h1" marginBottom="2rem">
-                Enjoy! 💁‍♂️
-              </Heading>
-              <SimpleGrid columns={[1, null, 2, 3]} templateRows="masonry">
-                {distribute(framedImages, 3).map((group, i) => (
-                  <Box key={i}>
-                    {group.map((imageData) => (
-                      <Container key={imageData} marginBottom="2rem">
-                        <Image
-                          src={imageData}
-                          alt="Framed image"
-                          borderRadius="md"
-                          cursor="pointer"
-                          border="0.25rem solid transparent"
-                          _hover={{ borderColor: "blue.500" }}
-                          onClick={() => shareOrDownload(imageData)}
-                        />
-                      </Container>
-                    ))}
-                  </Box>
-                ))}
-              </SimpleGrid>
-              <Button
-                margin="1rem"
-                onClick={() => {
-                  setSubmitted(false);
-                  setFramedImages([]);
-                }}
-              >
-                Try a new image
-              </Button>
-            </ScaleFade>
-            <ScaleFade in={!framedImages.length && submitted} unmountOnExit>
-              <Heading as="h1" marginBottom="2rem">
-                Cutting and glueing ... ✂️
-              </Heading>
-              <SimpleGrid columns={{ sm: 1, md: 2, lg: 3 }} spacing="1rem">
-                <Container minWidth="sm">
-                  <Skeleton height="245px" />
-                </Container>
-                <Container minWidth="sm">
-                  <Skeleton height="460px" />
-                </Container>
-                <Container minWidth="sm">
-                  <Skeleton height="245px" />
-                </Container>
-              </SimpleGrid>
-            </ScaleFade>
-            <ScaleFade in={!framedImages.length && !submitted} unmountOnExit>
-              <Box padding={16}>
-                <Container>
-                  <Heading as="h1" marginBottom="2rem">
-                    Framejoy
-                  </Heading>
-                  <input {...getInputProps()} />
-                  <Image
-                    src="/front-image.webp"
-                    alt="Your image plus a frame equals awesome combo!"
-                  />
-                  <Text textAlign="center" color="blue.600" marginTop={8}>
-                    Drop an image anywhere or{" "}
-                    <Button onClick={open}>browse</Button>
-                  </Text>
-
-                  <Box marginTop={4}>
-                    <Text textAlign="center" fontSize="small">
-                      Your uploaded image is not stored anywhere. Neither are
-                      the generated images, unless you share them!
-                    </Text>
-                  </Box>
-                </Container>
-              </Box>
-            </ScaleFade>
-          </VStack>
-          <Box position="absolute" as="footer" bottom="1" left="0" right="0">
-            <Text textAlign="center" fontSize="small">
-              The code's on{" "}
-              <Link
-                href="https://github.com/draperunner/framejoy"
-                color="blue.600"
-                isExternal
-              >
-                GitHub! ⭐️
-              </Link>
-            </Text>
-          </Box>
-        </Box>
+        <Main />
       </UserProvider>
     </ChakraProvider>
   );
