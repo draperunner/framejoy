@@ -46,7 +46,7 @@ function useAnonymousLogin() {
 
 const UserContext = createContext<User | null | undefined>(null);
 
-export const UserProvider: React.FC = (props) => {
+export const UserProvider: React.FC<Record<string, unknown>> = (props) => {
   const { user } = useAnonymousLogin();
 
   return <UserContext.Provider value={user} {...props} />;

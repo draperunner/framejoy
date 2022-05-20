@@ -149,7 +149,9 @@ const Main = () => {
   }, []);
 
   const { getRootProps, getInputProps, open, isDragActive } = useDropzone({
-    accept: "image/jpeg, image/png, image/webp",
+    accept: {
+      "image/*": [".jpeg, .png, .webp"],
+    },
     onDrop,
     onDropRejected,
     maxSize: 3 * 10e5, // 3 MB,
