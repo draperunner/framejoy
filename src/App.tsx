@@ -68,6 +68,7 @@ function fileToBase64(file: File | Blob): Promise<string> {
 const Main = () => {
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [framedImages, setFramedImages] = useState<string[]>([]);
+  const [takingPhoto, setTakingPhoto] = useState<boolean>(false);
 
   const toast = useToast();
 
@@ -141,6 +142,7 @@ const Main = () => {
     }
 
     setSubmitted(true);
+    setTakingPhoto(true);
 
     let mediaStream;
 
@@ -154,6 +156,7 @@ const Main = () => {
       // @ts-ignore
       const imageCapture = new window.ImageCapture(track);
       const blob: Blob = await imageCapture.takePhoto();
+      setTakingPhoto(false);
 
       const fileData = await fileToBase64(blob);
       const result = await frameImage({
@@ -164,6 +167,7 @@ const Main = () => {
     } catch (error) {
       console.error(error);
     } finally {
+      setTakingPhoto(false);
       if (mediaStream) {
         mediaStream.getTracks().forEach((track) => track.stop());
       }
@@ -245,7 +249,7 @@ const Main = () => {
         </ScaleFade>
         <ScaleFade in={!framedImages.length && submitted} unmountOnExit>
           <Heading as="h1" marginBottom="2rem">
-            Cutting and glueing ... ✂️
+            {takingPhoto ? "Say cheese! 🧀" : "Cutting and glueing ... ✂️"}
           </Heading>
           <SimpleGrid columns={{ sm: 1, md: 2, lg: 3 }} spacing="1rem">
             <Container minWidth="sm">
