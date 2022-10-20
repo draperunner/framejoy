@@ -26,6 +26,8 @@ import {
 } from "firebase/functions";
 import { UserProvider } from "./auth";
 
+const imageCaptureAvailable = "ImageCapture" in window;
+
 const functions = getFunctions(getApp(), "europe-west1");
 
 if (window.location.hostname === "localhost") {
@@ -51,7 +53,7 @@ function distribute<T>(array: T[], desiredArrayCount: number): T[][] {
   return distribution;
 }
 
-function fileToBase64(file: File): Promise<string> {
+function fileToBase64(file: File | Blob): Promise<string> {
   const reader = new FileReader();
   return new Promise((resolve, reject) => {
     reader.onloadend = () => {
@@ -132,6 +134,41 @@ const Main = () => {
     },
     [errorToast]
   );
+
+  const takePhoto = useCallback(async () => {
+    if (!imageCaptureAvailable) {
+      return;
+    }
+
+    setSubmitted(true);
+
+    let mediaStream;
+
+    try {
+      mediaStream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+      });
+
+      const track = mediaStream.getVideoTracks()[0];
+
+      // @ts-ignore
+      const imageCapture = new window.ImageCapture(track);
+      const blob: Blob = await imageCapture.takePhoto();
+
+      const fileData = await fileToBase64(blob);
+      const result = await frameImage({
+        data: fileData,
+      });
+
+      setFramedImages(result.data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      if (mediaStream) {
+        mediaStream.getTracks().forEach((track) => track.stop());
+      }
+    }
+  }, []);
 
   const shareOrDownload = useCallback(async (imageData: string) => {
     const blob = await fetch(imageData).then((res) => res.blob());
@@ -233,9 +270,17 @@ const Main = () => {
                 src="/front-image.webp"
                 alt="Your image plus a frame equals awesome combo!"
               />
-              <Text textAlign="center" color="blue.600" marginTop={8}>
-                Drop an image anywhere or <Button onClick={open}>browse</Button>
-              </Text>
+              {imageCaptureAvailable ? (
+                <Text textAlign="center" color="blue.600" marginTop={8}>
+                  Drop an image anywhere, <Button onClick={open}>browse</Button>{" "}
+                  or <Button onClick={takePhoto}>take a photo</Button>
+                </Text>
+              ) : (
+                <Text textAlign="center" color="blue.600" marginTop={8}>
+                  Drop an image anywhere or{" "}
+                  <Button onClick={open}>browse</Button>
+                </Text>
+              )}
 
               <Box marginTop={4}>
                 <Text textAlign="center" fontSize="small">
