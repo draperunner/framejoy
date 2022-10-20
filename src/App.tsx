@@ -191,7 +191,7 @@ const Main = () => {
 
   const { getRootProps, getInputProps, open, isDragActive } = useDropzone({
     accept: {
-      "image/*": [".jpeg, .png, .webp"],
+      "image/*": [".jpeg", ".png", ".webp"],
     },
     onDrop,
     onDropRejected,
