@@ -6,7 +6,7 @@ Put your images in funny or beautiful frames with just a simple upload. Perfect
 for generating your next profile picture, a funnier screenshot for your pull
 requests, or simply for having some fun with your friends.
 
-[Try it out now!](https://frame-joy.web.app)
+[Try it out now!](https://framejoy.art)
 
 All images that the frames are based on were found on [Unsplash](https://unsplash.com/)
 and are shared under the [Unsplash License](https://unsplash.com/license).
