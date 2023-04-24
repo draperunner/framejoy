@@ -21,6 +21,7 @@ export const frameImage = functions
   .region("europe-west1")
   .runWith({
     memory: "2GB",
+    maxInstances: 1
   })
   .https.onCall(async ({ data }, context) => {
     if (!context.auth) {
