@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "license": "MIT",
+  "type": "module",
   "engines": {
     "node": "20",
     "npm": "10"
@@ -24,23 +25,16 @@
     "react-dom": "^18.1.0",
     "react-dropzone": "^14.2.1",
     "react-icons": "^4.3.1",
-    "react-scripts": "5.0.1",
     "sharp": "^0.32.6",
-    "typescript": "^4.6.3",
-    "web-vitals": "^2.1.4"
+    "typescript": "^5.4.5"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "vite",
+    "build": "tsc && vite build",
     "emulators": "npm run build && firebase emulators:start --import ./emulator-export",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
     "lint": "eslint --ext .js,.ts src scripts functions",
     "deploy": "npm run build && firebase deploy",
     "framify": "node --require ts-node/register/transpile-only scripts/framify.ts && open output.jpg"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
   },
   "browserslist": {
     "production": [
@@ -55,11 +49,20 @@
     ]
   },
   "devDependencies": {
+    "@eslint/js": "^9.4.0",
     "@types/file-saver": "^2.0.5",
     "@types/node": "^20.14.2",
     "@types/sharp": "^0.30.2",
     "@types/uuid": "^8.3.0",
+    "@typescript-eslint/eslint-plugin": "^7.12.0",
+    "@typescript-eslint/parser": "^7.12.0",
+    "@vitejs/plugin-react-swc": "^3.7.0",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react": "^7.34.2",
+    "eslint-plugin-react-hooks": "^4.6.2",
     "firebase-tools": "^12.6.1",
-    "ts-node": "^10.7.0"
+    "globals": "^15.4.0",
+    "ts-node": "^10.7.0",
+    "vite": "^5.2.13"
   }
 }
