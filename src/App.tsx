@@ -37,8 +37,8 @@ if (window.location.hostname === "localhost") {
 
 const frameImage = httpsCallable<{ data: string }, string[]>(
   functions,
-  "frameImage",
-  {}
+  "frameImageSecondGen",
+  {},
 );
 
 function distribute<T>(array: T[], desiredArrayCount: number): T[][] {
@@ -81,7 +81,7 @@ const Main = () => {
         duration: 7000,
         isClosable: true,
       }),
-    [toast]
+    [toast],
   );
 
   const onDrop = useCallback(
@@ -102,7 +102,7 @@ const Main = () => {
         errorToast("Something went wrong.");
       }
     },
-    [errorToast]
+    [errorToast],
   );
 
   const onDropRejected = useCallback(
@@ -115,17 +115,17 @@ const Main = () => {
           switch (code) {
             case "file-too-large": {
               return errorToast(
-                "The file is too large. Please use an image less than 3 MB in size."
+                "The file is too large. Please use an image less than 3 MB in size.",
               );
             }
             case "file-invalid-type": {
               return errorToast(
-                "Invalid file type. Supported types are JPEG, PNG and WEBP."
+                "Invalid file type. Supported types are JPEG, PNG and WEBP.",
               );
             }
             case "too-many-files": {
               return errorToast(
-                "Too many files provided. Only one is supported."
+                "Too many files provided. Only one is supported.",
               );
             }
             default:
@@ -133,7 +133,7 @@ const Main = () => {
           }
         });
     },
-    [errorToast]
+    [errorToast],
   );
 
   const takePhoto = useCallback(async () => {

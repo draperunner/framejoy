@@ -1,4 +1,5 @@
-import * as functions from "firebase-functions";
+import { HttpsError, onCall } from "firebase-functions/v2/https";
+import { setGlobalOptions } from "firebase-functions/v2";
 import sharp, { OverlayOptions } from "sharp";
 
 import { initializeApp } from "firebase-admin/app";
@@ -9,6 +10,10 @@ initializeApp();
 
 const storage = getStorage();
 
+setGlobalOptions({
+  region: "europe-west1",
+});
+
 async function downloadFrame(path: string): Promise<Buffer> {
   const [buffer] = await storage
     .bucket("framejoy-frames")
@@ -17,25 +22,21 @@ async function downloadFrame(path: string): Promise<Buffer> {
   return buffer;
 }
 
-export const frameImage = functions
-  .region("europe-west1")
-  .runWith({
-    memory: "2GB",
-    maxInstances: 1
-  })
-  .https.onCall(async ({ data }, context) => {
-    if (!context.auth) {
-      throw new functions.https.HttpsError(
+export const frameImageSecondGen = onCall(
+  {
+    memory: "2GiB",
+    maxInstances: 1,
+  },
+  async ({ data: { data }, auth }) => {
+    if (!auth) {
+      throw new HttpsError(
         "failed-precondition",
-        "The function must be called while authenticated."
+        "The function must be called while authenticated.",
       );
     }
 
     if (!data || !new RegExp("^data:image/(png|jpeg|webp)").test(data)) {
-      throw new functions.https.HttpsError(
-        "invalid-argument",
-        "Invalid input data."
-      );
+      throw new HttpsError("invalid-argument", "Invalid input data.");
     }
 
     const dataWithoutPrefix = data.replace(/^data:.+;base64,/, "");
@@ -86,8 +87,9 @@ export const frameImage = functions
           .toBuffer();
 
         return "data:image/jpeg;base64," + compositeImage.toString("base64");
-      })
+      }),
     );
 
     return framedImageData;
-  });
+  },
+);
