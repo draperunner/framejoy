@@ -12,8 +12,7 @@ All images that the frames are based on were found on [Unsplash](https://unsplas
 and are shared under the [Unsplash License](https://unsplash.com/license).
 
 Neither your uploaded image or the generated ones are stored anywhere. All
-processing happens in-memory and the generated images are returned to you as
-base64-encoded data.
+processing happens in-browser.
 
 ## Local development
 
@@ -21,29 +20,12 @@ Install dependencies:
 
 ```
 npm install
-cd functions
-npm install
-cd ..
 ```
 
-Do an initial build of the functions:
-
-```
-cd functions
-npm run build
-cd ..
-```
-
-Then run the emulators (you need to have Java installed for this):
-
-```
-npm run emulators
-```
-
-In another terminal, start the frontend development server:
+Start the development server:
 
 ```
 npm start
 ```
 
-Go to http://localhost:3000 and enjoy!
+Go to http://localhost:5173 and enjoy!
