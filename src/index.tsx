@@ -10,6 +10,6 @@ if (element) {
     <React.StrictMode>
       <ColorModeScript />
       <App />
-    </React.StrictMode>
+    </React.StrictMode>,
   );
 }
