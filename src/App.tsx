@@ -18,28 +18,9 @@ import {
 import { FileRejection, useDropzone } from "react-dropzone";
 import { saveAs } from "file-saver";
 
-import { getApp } from "firebase/app";
-import {
-  getFunctions,
-  connectFunctionsEmulator,
-  httpsCallable,
-} from "firebase/functions";
-import { UserProvider } from "./auth";
+import { frameImage } from "./frameImage";
 
 const imageCaptureAvailable = "ImageCapture" in window;
-
-const functions = getFunctions(getApp(), "europe-west1");
-
-if (window.location.hostname === "localhost") {
-  console.log("Using functions emulator");
-  connectFunctionsEmulator(functions, "localhost", 5001);
-}
-
-const frameImage = httpsCallable<{ data: string }, string[]>(
-  functions,
-  "frameImageSecondGen",
-  {},
-);
 
 function distribute<T>(array: T[], desiredArrayCount: number): T[][] {
   const distribution: T[][] = new Array(desiredArrayCount)
@@ -93,11 +74,9 @@ const Main = () => {
 
       try {
         const fileData = await fileToBase64(file);
-        const result = await frameImage({
-          data: fileData,
-        });
+        const result = await frameImage(fileData);
 
-        setFramedImages(result.data);
+        setFramedImages(result);
       } catch (error) {
         errorToast("Something went wrong.");
       }
@@ -159,11 +138,9 @@ const Main = () => {
       setTakingPhoto(false);
 
       const fileData = await fileToBase64(blob);
-      const result = await frameImage({
-        data: fileData,
-      });
+      const result = await frameImage(fileData);
 
-      setFramedImages(result.data);
+      setFramedImages(result);
     } catch (error) {
       console.error(error);
     } finally {
@@ -315,9 +292,7 @@ const Main = () => {
 export const App = () => {
   return (
     <ChakraProvider theme={theme}>
-      <UserProvider>
-        <Main />
-      </UserProvider>
+      <Main />
     </ChakraProvider>
   );
 };
