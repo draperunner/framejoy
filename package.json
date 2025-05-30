@@ -12,10 +12,6 @@
     "@chakra-ui/react": "^2.10.5",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^14.6.1",
-    "@types/jest": "^27.5.2",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
     "file-saver": "^2.0.5",
@@ -23,7 +19,6 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-dropzone": "^14.3.5",
-    "react-icons": "^4.12.0",
     "typescript": "^5.7.3"
   },
   "scripts": {
@@ -48,8 +43,6 @@
     "@eslint/js": "^9.18.0",
     "@types/file-saver": "^2.0.7",
     "@types/node": "^20.17.16",
-    "@types/sharp": "^0.30.5",
-    "@types/uuid": "^8.3.4",
     "@typescript-eslint/eslint-plugin": "^7.18.0",
     "@typescript-eslint/parser": "^7.18.0",
     "@vitejs/plugin-react-swc": "^3.7.2",
@@ -58,7 +51,6 @@
     "eslint-plugin-react-hooks": "^4.6.2",
     "firebase-tools": "^13.29.2",
     "globals": "^15.14.0",
-    "ts-node": "^10.9.2",
     "vite": "^5.4.14"
   }
 }
