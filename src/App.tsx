@@ -265,8 +265,8 @@ const Main = () => {
 
               <Box marginTop={4}>
                 <Text textAlign="center" fontSize="small">
-                  Your uploaded image is not stored anywhere. Neither are the
-                  generated images, unless you share them!
+                  Your uploaded image is processed in-browser and not sent or
+                  stored anywhere.
                 </Text>
               </Box>
             </Container>
