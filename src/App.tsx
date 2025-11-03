@@ -132,7 +132,6 @@ const Main = () => {
 
       const track = mediaStream.getVideoTracks()[0];
 
-      // @ts-ignore
       const imageCapture = new window.ImageCapture(track);
       const blob: Blob = await imageCapture.takePhoto();
       setTakingPhoto(false);
@@ -142,14 +141,17 @@ const Main = () => {
 
       setFramedImages(result);
     } catch (error) {
-      console.error(error);
+      errorToast(
+        "Could not take photo. Check that your browser has access to your camera.",
+      );
+      setSubmitted(false);
     } finally {
       setTakingPhoto(false);
       if (mediaStream) {
         mediaStream.getTracks().forEach((track) => track.stop());
       }
     }
-  }, []);
+  }, [errorToast]);
 
   const shareOrDownload = useCallback(async (imageData: JpegDataURL) => {
     const blob = await fetch(imageData).then((res) => res.blob());
@@ -257,13 +259,21 @@ const Main = () => {
               />
               {imageCaptureAvailable ? (
                 <Text textAlign="center" color="blue.600" marginTop={8}>
-                  Drop an image anywhere, <Button onClick={open}>browse</Button>{" "}
-                  or <Button onClick={takePhoto}>take a photo</Button>
+                  Drop an image anywhere,{" "}
+                  <Button margin="4px" onClick={open}>
+                    browse
+                  </Button>{" "}
+                  or{" "}
+                  <Button margin="4px" onClick={takePhoto}>
+                    take a photo
+                  </Button>
                 </Text>
               ) : (
                 <Text textAlign="center" color="blue.600" marginTop={8}>
                   Drop an image anywhere or{" "}
-                  <Button onClick={open}>browse</Button>
+                  <Button margin="4px" onClick={open}>
+                    browse
+                  </Button>
                 </Text>
               )}
 
