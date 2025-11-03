@@ -176,7 +176,7 @@ const Main = () => {
     },
     onDrop,
     onDropRejected,
-    maxSize: 3 * 10e5, // 3 MB,
+    maxSize: 15 * 10e5, // 15 MB,
     maxFiles: 1,
     noClick: true,
     noKeyboard: true,
