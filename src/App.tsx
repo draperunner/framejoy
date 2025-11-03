@@ -18,7 +18,7 @@ import {
 import { FileRejection, useDropzone } from "react-dropzone";
 import { saveAs } from "file-saver";
 
-import { frameImage } from "./frameImage";
+import { frameImage, JpegDataURL } from "./frameImage";
 
 const imageCaptureAvailable = "ImageCapture" in window;
 
@@ -48,7 +48,7 @@ function fileToBase64(file: File | Blob): Promise<string> {
 
 const Main = () => {
   const [submitted, setSubmitted] = useState<boolean>(false);
-  const [framedImages, setFramedImages] = useState<string[]>([]);
+  const [framedImages, setFramedImages] = useState<JpegDataURL[]>([]);
   const [takingPhoto, setTakingPhoto] = useState<boolean>(false);
 
   const toast = useToast();
@@ -151,12 +151,16 @@ const Main = () => {
     }
   }, []);
 
-  const shareOrDownload = useCallback(async (imageData: string) => {
+  const shareOrDownload = useCallback(async (imageData: JpegDataURL) => {
     const blob = await fetch(imageData).then((res) => res.blob());
     const fileName = "framed-image.jpg";
 
     const shareData: ShareData = {
-      files: [new File([blob], fileName)],
+      files: [
+        new File([blob], fileName, {
+          type: "image/jpeg",
+        }),
+      ],
     };
 
     if (navigator.canShare && navigator.canShare(shareData)) {

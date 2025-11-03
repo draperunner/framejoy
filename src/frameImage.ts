@@ -74,7 +74,11 @@ function rotateImage(
   return canvas;
 }
 
-export async function frameImage(data: string): Promise<string[]> {
+declare const __brand: unique symbol;
+
+export type JpegDataURL = string & { [__brand]: "JpegDataURL" };
+
+export async function frameImage(data: string): Promise<JpegDataURL[]> {
   if (!data || !new RegExp("^data:image/(png|jpeg|webp)").test(data)) {
     throw new Error("Invalid input data.");
   }
@@ -128,7 +132,7 @@ export async function frameImage(data: string): Promise<string[]> {
         }
 
         // Convert to JPEG and return as base64
-        return canvas.toDataURL("image/jpeg", 0.9);
+        return canvas.toDataURL("image/jpeg", 0.9) as JpegDataURL;
       } catch (error) {
         console.error(`Error processing frame ${frame.id}:`, error);
         throw error;
