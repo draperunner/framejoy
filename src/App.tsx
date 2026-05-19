@@ -23,9 +23,10 @@ import { frameImage, JpegDataURL } from "./frameImage";
 const imageCaptureAvailable = "ImageCapture" in window;
 
 function distribute<T>(array: T[], desiredArrayCount: number): T[][] {
-  const distribution: T[][] = new Array(desiredArrayCount)
-    .fill([])
-    .map(() => []);
+  const distribution: T[][] = Array.from(
+    { length: desiredArrayCount },
+    () => [],
+  );
   array.forEach((item, index) => {
     const i = index % desiredArrayCount;
     distribution[i].push(item);
@@ -77,7 +78,7 @@ const Main = () => {
         const result = await frameImage(fileData);
 
         setFramedImages(result);
-      } catch (error) {
+      } catch {
         errorToast("Something went wrong.");
       }
     },
@@ -140,7 +141,7 @@ const Main = () => {
       const result = await frameImage(fileData);
 
       setFramedImages(result);
-    } catch (error) {
+    } catch {
       errorToast(
         "Could not take photo. Check that your browser has access to your camera.",
       );
