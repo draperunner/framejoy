@@ -85,7 +85,7 @@ export async function frameImage(data: string): Promise<JpegDataURL[]> {
 
   // Load the user image
   const userImage = await loadImage(data);
-  const { width = 1, height = 1 } = userImage;
+  const { width, height } = userImage;
   const aspectRatio = width / height;
 
   // Select the 6 closest frames based on aspect ratio
