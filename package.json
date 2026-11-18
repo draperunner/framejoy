@@ -15,7 +15,6 @@
     "@types/react-dom": "^18.3.7",
     "file-saver": "^2.0.5",
     "framer-motion": "^6.5.1",
-    "posthog-js": "^1.374.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-dropzone": "^14.4.1",
